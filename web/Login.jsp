@@ -10,12 +10,13 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Login</title>
-        <link rel="stylesheet" href="https://bootswatch.com/4/sketchy/bootstrap.min.css">
+        <link rel="stylesheet" href="https://bootswatch.com/4/journal/bootstrap.min.css">
     </head>
     <body>
         <div class="container">
             <jsp:include page="include/Header.jsp?title=Welcome to Triple B"/> 
-                <form action="Login" method="post">
+            <form action="Login" method="post">
+                <!--<div class="btn-group-vertical" data-toggle="buttons">-->
                     <table class="table">
                         <tr>
                             <td>Username :</td>
@@ -27,12 +28,13 @@
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input type="submit" value="Login"</td>
+                            <td><input type="submit" class="btn btn-primary" value="Login"</td>
                         </tr>
                         <tr>
                             <td colspan="2"><p style="color: red">${loginfailed}</p></td>
                         </tr>
                     </table>
-                </form>
+                <!--</div>-->
+            </form>
     </body>
 </html>
