@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package jpa.model;
 
 import java.io.Serializable;
 import java.util.List;
@@ -133,7 +133,7 @@ public class Cart implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Cart[ cartid=" + cartid + " ]";
+        return "jpa.model.Cart[ cartid=" + cartid + " ]";
     }
     
 }

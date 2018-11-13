@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model.jpa.controller;
+package jpa.model.controller;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,11 +14,11 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.UserTransaction;
-import model.Customer;
-import model.Payment;
-import model.jpa.controller.exceptions.NonexistentEntityException;
-import model.jpa.controller.exceptions.PreexistingEntityException;
-import model.jpa.controller.exceptions.RollbackFailureException;
+import jpa.model.Customer;
+import jpa.model.Payment;
+import jpa.model.controller.exceptions.NonexistentEntityException;
+import jpa.model.controller.exceptions.PreexistingEntityException;
+import jpa.model.controller.exceptions.RollbackFailureException;
 
 /**
  *

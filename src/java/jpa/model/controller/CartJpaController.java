@@ -3,25 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model.jpa.controller;
+package jpa.model.controller;
 
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import model.Customer;
-import model.Lineitem;
+import jpa.model.Customer;
+import jpa.model.Lineitem;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.transaction.UserTransaction;
-import model.Cart;
-import model.jpa.controller.exceptions.IllegalOrphanException;
-import model.jpa.controller.exceptions.NonexistentEntityException;
-import model.jpa.controller.exceptions.PreexistingEntityException;
-import model.jpa.controller.exceptions.RollbackFailureException;
+import jpa.model.Cart;
+import jpa.model.controller.exceptions.IllegalOrphanException;
+import jpa.model.controller.exceptions.NonexistentEntityException;
+import jpa.model.controller.exceptions.PreexistingEntityException;
+import jpa.model.controller.exceptions.RollbackFailureException;
 
 /**
  *

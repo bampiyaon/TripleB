@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model.jpa.controller;
+package jpa.model.controller;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,18 +14,18 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.UserTransaction;
-import model.Register;
-import model.jpa.controller.exceptions.NonexistentEntityException;
-import model.jpa.controller.exceptions.PreexistingEntityException;
-import model.jpa.controller.exceptions.RollbackFailureException;
+import jpa.model.Shipping;
+import jpa.model.controller.exceptions.NonexistentEntityException;
+import jpa.model.controller.exceptions.PreexistingEntityException;
+import jpa.model.controller.exceptions.RollbackFailureException;
 
 /**
  *
  * @author piyao
  */
-public class RegisterJpaController implements Serializable {
+public class ShippingJpaController implements Serializable {
 
-    public RegisterJpaController(UserTransaction utx, EntityManagerFactory emf) {
+    public ShippingJpaController(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
         this.emf = emf;
     }
@@ -36,12 +36,12 @@ public class RegisterJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Register register) throws PreexistingEntityException, RollbackFailureException, Exception {
+    public void create(Shipping shipping) throws PreexistingEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            em.persist(register);
+            em.persist(shipping);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -49,8 +49,8 @@ public class RegisterJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findRegister(register.getStudentid()) != null) {
-                throw new PreexistingEntityException("Register " + register + " already exists.", ex);
+            if (findShipping(shipping.getBuildingno()) != null) {
+                throw new PreexistingEntityException("Shipping " + shipping + " already exists.", ex);
             }
             throw ex;
         } finally {
@@ -60,12 +60,12 @@ public class RegisterJpaController implements Serializable {
         }
     }
 
-    public void edit(Register register) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void edit(Shipping shipping) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            register = em.merge(register);
+            shipping = em.merge(shipping);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -75,9 +75,9 @@ public class RegisterJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                String id = register.getStudentid();
-                if (findRegister(id) == null) {
-                    throw new NonexistentEntityException("The register with id " + id + " no longer exists.");
+                String id = shipping.getBuildingno();
+                if (findShipping(id) == null) {
+                    throw new NonexistentEntityException("The shipping with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -93,14 +93,14 @@ public class RegisterJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
-            Register register;
+            Shipping shipping;
             try {
-                register = em.getReference(Register.class, id);
-                register.getStudentid();
+                shipping = em.getReference(Shipping.class, id);
+                shipping.getBuildingno();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The register with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The shipping with id " + id + " no longer exists.", enfe);
             }
-            em.remove(register);
+            em.remove(shipping);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -116,19 +116,19 @@ public class RegisterJpaController implements Serializable {
         }
     }
 
-    public List<Register> findRegisterEntities() {
-        return findRegisterEntities(true, -1, -1);
+    public List<Shipping> findShippingEntities() {
+        return findShippingEntities(true, -1, -1);
     }
 
-    public List<Register> findRegisterEntities(int maxResults, int firstResult) {
-        return findRegisterEntities(false, maxResults, firstResult);
+    public List<Shipping> findShippingEntities(int maxResults, int firstResult) {
+        return findShippingEntities(false, maxResults, firstResult);
     }
 
-    private List<Register> findRegisterEntities(boolean all, int maxResults, int firstResult) {
+    private List<Shipping> findShippingEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Register.class));
+            cq.select(cq.from(Shipping.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -140,20 +140,20 @@ public class RegisterJpaController implements Serializable {
         }
     }
 
-    public Register findRegister(String id) {
+    public Shipping findShipping(String id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Register.class, id);
+            return em.find(Shipping.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getRegisterCount() {
+    public int getShippingCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Register> rt = cq.from(Register.class);
+            Root<Shipping> rt = cq.from(Shipping.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

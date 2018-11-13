@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package jpa.model;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -61,6 +61,10 @@ public class Register implements Serializable {
 
     public Register(String studentid) {
         this.studentid = studentid;
+    }
+
+    public Register(String email, String password) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public String getStudentid() {
@@ -125,7 +129,7 @@ public class Register implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Register[ studentid=" + studentid + " ]";
+        return "jpa.model.Register[ studentid=" + studentid + " ]";
     }
     
 }

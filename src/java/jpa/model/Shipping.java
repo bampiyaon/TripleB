@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package jpa.model;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -96,7 +96,7 @@ public class Shipping implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Shipping[ buildingno=" + buildingno + " ]";
+        return "jpa.model.Shipping[ buildingno=" + buildingno + " ]";
     }
     
 }

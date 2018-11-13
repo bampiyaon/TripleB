@@ -14,7 +14,8 @@
     </head>
     <body>
         <div class="container">
-            <jsp:include page="include/Header.jsp?title=Welcome to Triple B"/> 
+            <jsp:include page="include/Header.jsp?title=Login"/> 
+            
             <form action="Login" method="post">
                 <!--<div class="btn-group-vertical" data-toggle="buttons">-->
                     <table class="table">

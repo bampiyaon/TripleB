@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package jpa.model;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,6 +12,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -50,6 +52,9 @@ public class Product implements Serializable {
     @Size(max = 100)
     @Column(name = "PRODUCTDETAIL")
     private String productdetail;
+    @JoinColumn(name = "SHOP_SHOPID", referencedColumnName = "SHOPID")
+    @ManyToOne
+    private Shop shopShopid;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "productProductid")
     private List<Lineitem> lineitemList;
 
@@ -92,6 +97,14 @@ public class Product implements Serializable {
         this.productdetail = productdetail;
     }
 
+    public Shop getShopShopid() {
+        return shopShopid;
+    }
+
+    public void setShopShopid(Shop shopShopid) {
+        this.shopShopid = shopShopid;
+    }
+
     @XmlTransient
     public List<Lineitem> getLineitemList() {
         return lineitemList;
@@ -123,7 +136,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Product[ productid=" + productid + " ]";
+        return "jpa.model.Product[ productid=" + productid + " ]";
     }
     
 }

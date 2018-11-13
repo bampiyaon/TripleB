@@ -3,24 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model.jpa.controller;
+package jpa.model.controller;
 
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import model.Lineitem;
+import jpa.model.Shop;
+import jpa.model.Lineitem;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.transaction.UserTransaction;
-import model.Product;
-import model.jpa.controller.exceptions.IllegalOrphanException;
-import model.jpa.controller.exceptions.NonexistentEntityException;
-import model.jpa.controller.exceptions.PreexistingEntityException;
-import model.jpa.controller.exceptions.RollbackFailureException;
+import jpa.model.Product;
+import jpa.model.controller.exceptions.IllegalOrphanException;
+import jpa.model.controller.exceptions.NonexistentEntityException;
+import jpa.model.controller.exceptions.PreexistingEntityException;
+import jpa.model.controller.exceptions.RollbackFailureException;
 
 /**
  *
@@ -47,6 +48,11 @@ public class ProductJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
+            Shop shopShopid = product.getShopShopid();
+            if (shopShopid != null) {
+                shopShopid = em.getReference(shopShopid.getClass(), shopShopid.getShopid());
+                product.setShopShopid(shopShopid);
+            }
             List<Lineitem> attachedLineitemList = new ArrayList<Lineitem>();
             for (Lineitem lineitemListLineitemToAttach : product.getLineitemList()) {
                 lineitemListLineitemToAttach = em.getReference(lineitemListLineitemToAttach.getClass(), lineitemListLineitemToAttach.getLineitemid());
@@ -54,6 +60,10 @@ public class ProductJpaController implements Serializable {
             }
             product.setLineitemList(attachedLineitemList);
             em.persist(product);
+            if (shopShopid != null) {
+                shopShopid.getProductList().add(product);
+                shopShopid = em.merge(shopShopid);
+            }
             for (Lineitem lineitemListLineitem : product.getLineitemList()) {
                 Product oldProductProductidOfLineitemListLineitem = lineitemListLineitem.getProductProductid();
                 lineitemListLineitem.setProductProductid(product);
@@ -87,6 +97,8 @@ public class ProductJpaController implements Serializable {
             utx.begin();
             em = getEntityManager();
             Product persistentProduct = em.find(Product.class, product.getProductid());
+            Shop shopShopidOld = persistentProduct.getShopShopid();
+            Shop shopShopidNew = product.getShopShopid();
             List<Lineitem> lineitemListOld = persistentProduct.getLineitemList();
             List<Lineitem> lineitemListNew = product.getLineitemList();
             List<String> illegalOrphanMessages = null;
@@ -101,6 +113,10 @@ public class ProductJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
+            if (shopShopidNew != null) {
+                shopShopidNew = em.getReference(shopShopidNew.getClass(), shopShopidNew.getShopid());
+                product.setShopShopid(shopShopidNew);
+            }
             List<Lineitem> attachedLineitemListNew = new ArrayList<Lineitem>();
             for (Lineitem lineitemListNewLineitemToAttach : lineitemListNew) {
                 lineitemListNewLineitemToAttach = em.getReference(lineitemListNewLineitemToAttach.getClass(), lineitemListNewLineitemToAttach.getLineitemid());
@@ -109,6 +125,14 @@ public class ProductJpaController implements Serializable {
             lineitemListNew = attachedLineitemListNew;
             product.setLineitemList(lineitemListNew);
             product = em.merge(product);
+            if (shopShopidOld != null && !shopShopidOld.equals(shopShopidNew)) {
+                shopShopidOld.getProductList().remove(product);
+                shopShopidOld = em.merge(shopShopidOld);
+            }
+            if (shopShopidNew != null && !shopShopidNew.equals(shopShopidOld)) {
+                shopShopidNew.getProductList().add(product);
+                shopShopidNew = em.merge(shopShopidNew);
+            }
             for (Lineitem lineitemListNewLineitem : lineitemListNew) {
                 if (!lineitemListOld.contains(lineitemListNewLineitem)) {
                     Product oldProductProductidOfLineitemListNewLineitem = lineitemListNewLineitem.getProductProductid();
@@ -164,6 +188,11 @@ public class ProductJpaController implements Serializable {
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            Shop shopShopid = product.getShopShopid();
+            if (shopShopid != null) {
+                shopShopid.getProductList().remove(product);
+                shopShopid = em.merge(shopShopid);
             }
             em.remove(product);
             utx.commit();
