@@ -44,12 +44,21 @@ UserTransaction utx;
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String studentId = request.getParameter("studentId");
+        String username = request.getParameter("username");
         String password = request.getParameter("password");
+        String cusfname = request.getParameter("cusfname");
+        String cuslname = request.getParameter("cuslname");
 
-        if (studentId != null && password != null) {
-            password = cryptWithMD5(password).substring(0, 24);
-            Register register = new Register(studentId, password);
+        if (username != null && username.trim().length() > 0 && 
+            password != null && password.trim().length() > 0 &&
+            cusfname != null && cusfname.trim().length() > 0 && 
+            cuslname != null && cuslname.trim().length() > 0 ) {
+            
+            String passwordEncrypt=cryptWithMD5(password);
+            
+            Register register = new Register();
+            register.setPassword(password);
+            
             RegisterJpaController regJpaCtrl = new RegisterJpaController(utx, emf);
             try {
                 regJpaCtrl.create(register);

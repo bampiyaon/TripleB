@@ -16,7 +16,6 @@ import javax.persistence.criteria.Root;
 import javax.transaction.UserTransaction;
 import jpa.model.Cart;
 import jpa.model.Lineitem;
-import jpa.model.Product;
 import jpa.model.controller.exceptions.NonexistentEntityException;
 import jpa.model.controller.exceptions.PreexistingEntityException;
 import jpa.model.controller.exceptions.RollbackFailureException;
@@ -48,19 +47,10 @@ public class LineitemJpaController implements Serializable {
                 cartCartid = em.getReference(cartCartid.getClass(), cartCartid.getCartid());
                 lineitem.setCartCartid(cartCartid);
             }
-            Product productProductid = lineitem.getProductProductid();
-            if (productProductid != null) {
-                productProductid = em.getReference(productProductid.getClass(), productProductid.getProductid());
-                lineitem.setProductProductid(productProductid);
-            }
             em.persist(lineitem);
             if (cartCartid != null) {
                 cartCartid.getLineitemList().add(lineitem);
                 cartCartid = em.merge(cartCartid);
-            }
-            if (productProductid != null) {
-                productProductid.getLineitemList().add(lineitem);
-                productProductid = em.merge(productProductid);
             }
             utx.commit();
         } catch (Exception ex) {
@@ -88,15 +78,9 @@ public class LineitemJpaController implements Serializable {
             Lineitem persistentLineitem = em.find(Lineitem.class, lineitem.getLineitemid());
             Cart cartCartidOld = persistentLineitem.getCartCartid();
             Cart cartCartidNew = lineitem.getCartCartid();
-            Product productProductidOld = persistentLineitem.getProductProductid();
-            Product productProductidNew = lineitem.getProductProductid();
             if (cartCartidNew != null) {
                 cartCartidNew = em.getReference(cartCartidNew.getClass(), cartCartidNew.getCartid());
                 lineitem.setCartCartid(cartCartidNew);
-            }
-            if (productProductidNew != null) {
-                productProductidNew = em.getReference(productProductidNew.getClass(), productProductidNew.getProductid());
-                lineitem.setProductProductid(productProductidNew);
             }
             lineitem = em.merge(lineitem);
             if (cartCartidOld != null && !cartCartidOld.equals(cartCartidNew)) {
@@ -106,14 +90,6 @@ public class LineitemJpaController implements Serializable {
             if (cartCartidNew != null && !cartCartidNew.equals(cartCartidOld)) {
                 cartCartidNew.getLineitemList().add(lineitem);
                 cartCartidNew = em.merge(cartCartidNew);
-            }
-            if (productProductidOld != null && !productProductidOld.equals(productProductidNew)) {
-                productProductidOld.getLineitemList().remove(lineitem);
-                productProductidOld = em.merge(productProductidOld);
-            }
-            if (productProductidNew != null && !productProductidNew.equals(productProductidOld)) {
-                productProductidNew.getLineitemList().add(lineitem);
-                productProductidNew = em.merge(productProductidNew);
             }
             utx.commit();
         } catch (Exception ex) {
@@ -153,11 +129,6 @@ public class LineitemJpaController implements Serializable {
             if (cartCartid != null) {
                 cartCartid.getLineitemList().remove(lineitem);
                 cartCartid = em.merge(cartCartid);
-            }
-            Product productProductid = lineitem.getProductProductid();
-            if (productProductid != null) {
-                productProductid.getLineitemList().remove(lineitem);
-                productProductid = em.merge(productProductid);
             }
             em.remove(lineitem);
             utx.commit();

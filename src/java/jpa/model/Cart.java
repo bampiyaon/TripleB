@@ -49,7 +49,7 @@ public class Cart implements Serializable {
     private Double carttotal;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "cartCartid")
     private Customer customer;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cartCartid")
+    @OneToMany(mappedBy = "cartCartid")
     private List<Lineitem> lineitemList;
     @JoinColumn(name = "CUSTOMER_CUSTOMERID", referencedColumnName = "CUSTOMERID")
     @OneToOne(optional = false)

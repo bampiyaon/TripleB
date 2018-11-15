@@ -28,7 +28,7 @@ public class ShoppingCart implements Serializable {
     public void add(Product p) {
         LineItem line = cart.get(p.getProductid());
         if (line == null) {
-            cart.put(p.getProductid().toString(), new LineItem(p));
+            cart.put(p.getProductid(), new LineItem(p));
         } else {
             line.setQuantity(line.getQuantity() + 1);
         }

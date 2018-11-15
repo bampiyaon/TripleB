@@ -6,22 +6,16 @@
 package jpa.model;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -35,15 +29,17 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Product.findByProductid", query = "SELECT p FROM Product p WHERE p.productid = :productid")
     , @NamedQuery(name = "Product.findByProductname", query = "SELECT p FROM Product p WHERE p.productname = :productname")
     , @NamedQuery(name = "Product.findByProductprince", query = "SELECT p FROM Product p WHERE p.productprince = :productprince")
-    , @NamedQuery(name = "Product.findByProductdetail", query = "SELECT p FROM Product p WHERE p.productdetail = :productdetail")})
+    , @NamedQuery(name = "Product.findByProductdetail", query = "SELECT p FROM Product p WHERE p.productdetail = :productdetail")
+    , @NamedQuery(name = "Product.findByShopShopid", query = "SELECT p FROM Product p WHERE p.shopShopid = :shopShopid")})
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 10)
     @Column(name = "PRODUCTID")
-    private Integer productid;
+    private String productid;
     @Size(max = 50)
     @Column(name = "PRODUCTNAME")
     private String productname;
@@ -52,24 +48,21 @@ public class Product implements Serializable {
     @Size(max = 100)
     @Column(name = "PRODUCTDETAIL")
     private String productdetail;
-    @JoinColumn(name = "SHOP_SHOPID", referencedColumnName = "SHOPID")
-    @ManyToOne
-    private Shop shopShopid;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productProductid")
-    private List<Lineitem> lineitemList;
+    @Column(name = "SHOP_SHOPID")
+    private Integer shopShopid;
 
     public Product() {
     }
 
-    public Product(Integer productid) {
+    public Product(String productid) {
         this.productid = productid;
     }
 
-    public Integer getProductid() {
+    public String getProductid() {
         return productid;
     }
 
-    public void setProductid(Integer productid) {
+    public void setProductid(String productid) {
         this.productid = productid;
     }
 
@@ -97,21 +90,12 @@ public class Product implements Serializable {
         this.productdetail = productdetail;
     }
 
-    public Shop getShopShopid() {
+    public Integer getShopShopid() {
         return shopShopid;
     }
 
-    public void setShopShopid(Shop shopShopid) {
+    public void setShopShopid(Integer shopShopid) {
         this.shopShopid = shopShopid;
-    }
-
-    @XmlTransient
-    public List<Lineitem> getLineitemList() {
-        return lineitemList;
-    }
-
-    public void setLineitemList(List<Lineitem> lineitemList) {
-        this.lineitemList = lineitemList;
     }
 
     @Override

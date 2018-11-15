@@ -153,14 +153,6 @@ public class CartJpaController implements Serializable {
                     illegalOrphanMessages.add("The Customer " + customerCustomeridNew + " already has an item of type Cart whose customerCustomerid column cannot be null. Please make another selection for the customerCustomerid field.");
                 }
             }
-            for (Lineitem lineitemListOldLineitem : lineitemListOld) {
-                if (!lineitemListNew.contains(lineitemListOldLineitem)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Lineitem " + lineitemListOldLineitem + " since its cartCartid field is not nullable.");
-                }
-            }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
@@ -192,6 +184,12 @@ public class CartJpaController implements Serializable {
             if (customerCustomeridNew != null && !customerCustomeridNew.equals(customerCustomeridOld)) {
                 customerCustomeridNew.setCartCartid(cart);
                 customerCustomeridNew = em.merge(customerCustomeridNew);
+            }
+            for (Lineitem lineitemListOldLineitem : lineitemListOld) {
+                if (!lineitemListNew.contains(lineitemListOldLineitem)) {
+                    lineitemListOldLineitem.setCartCartid(null);
+                    lineitemListOldLineitem = em.merge(lineitemListOldLineitem);
+                }
             }
             for (Lineitem lineitemListNewLineitem : lineitemListNew) {
                 if (!lineitemListOld.contains(lineitemListNewLineitem)) {
@@ -253,15 +251,13 @@ public class CartJpaController implements Serializable {
                 }
                 illegalOrphanMessages.add("This Cart (" + cart + ") cannot be destroyed since the Customer " + customerCustomeridOrphanCheck + " in its customerCustomerid field has a non-nullable cartCartid field.");
             }
-            List<Lineitem> lineitemListOrphanCheck = cart.getLineitemList();
-            for (Lineitem lineitemListOrphanCheckLineitem : lineitemListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Cart (" + cart + ") cannot be destroyed since the Lineitem " + lineitemListOrphanCheckLineitem + " in its lineitemList field has a non-nullable cartCartid field.");
-            }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            List<Lineitem> lineitemList = cart.getLineitemList();
+            for (Lineitem lineitemListLineitem : lineitemList) {
+                lineitemListLineitem.setCartCartid(null);
+                lineitemListLineitem = em.merge(lineitemListLineitem);
             }
             em.remove(cart);
             utx.commit();

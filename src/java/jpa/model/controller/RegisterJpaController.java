@@ -49,7 +49,7 @@ public class RegisterJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findRegister(register.getStudentid()) != null) {
+            if (findRegister(register.getUsername()) != null) {
                 throw new PreexistingEntityException("Register " + register + " already exists.", ex);
             }
             throw ex;
@@ -75,7 +75,7 @@ public class RegisterJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                String id = register.getStudentid();
+                String id = register.getUsername();
                 if (findRegister(id) == null) {
                     throw new NonexistentEntityException("The register with id " + id + " no longer exists.");
                 }
@@ -96,7 +96,7 @@ public class RegisterJpaController implements Serializable {
             Register register;
             try {
                 register = em.getReference(Register.class, id);
-                register.getStudentid();
+                register.getUsername();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The register with id " + id + " no longer exists.", enfe);
             }

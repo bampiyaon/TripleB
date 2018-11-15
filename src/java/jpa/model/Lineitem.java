@@ -28,8 +28,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Lineitem.findAll", query = "SELECT l FROM Lineitem l")
     , @NamedQuery(name = "Lineitem.findByLineitemid", query = "SELECT l FROM Lineitem l WHERE l.lineitemid = :lineitemid")
+    , @NamedQuery(name = "Lineitem.findByPrice", query = "SELECT l FROM Lineitem l WHERE l.price = :price")
     , @NamedQuery(name = "Lineitem.findByQuantity", query = "SELECT l FROM Lineitem l WHERE l.quantity = :quantity")
-    , @NamedQuery(name = "Lineitem.findByPrice", query = "SELECT l FROM Lineitem l WHERE l.price = :price")})
+    , @NamedQuery(name = "Lineitem.findByProductProductid", query = "SELECT l FROM Lineitem l WHERE l.productProductid = :productProductid")})
 public class Lineitem implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -38,16 +39,15 @@ public class Lineitem implements Serializable {
     @NotNull
     @Column(name = "LINEITEMID")
     private Integer lineitemid;
-    @Column(name = "QUANTITY")
-    private Integer quantity;
     @Column(name = "PRICE")
     private Integer price;
+    @Column(name = "QUANTITY")
+    private Integer quantity;
+    @Column(name = "PRODUCT_PRODUCTID")
+    private Integer productProductid;
     @JoinColumn(name = "CART_CARTID", referencedColumnName = "CARTID")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Cart cartCartid;
-    @JoinColumn(name = "PRODUCT_PRODUCTID", referencedColumnName = "PRODUCTID")
-    @ManyToOne(optional = false)
-    private Product productProductid;
 
     public Lineitem() {
     }
@@ -64,14 +64,6 @@ public class Lineitem implements Serializable {
         this.lineitemid = lineitemid;
     }
 
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
     public Integer getPrice() {
         return price;
     }
@@ -80,20 +72,28 @@ public class Lineitem implements Serializable {
         this.price = price;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Integer getProductProductid() {
+        return productProductid;
+    }
+
+    public void setProductProductid(Integer productProductid) {
+        this.productProductid = productProductid;
+    }
+
     public Cart getCartCartid() {
         return cartCartid;
     }
 
     public void setCartCartid(Cart cartCartid) {
         this.cartCartid = cartCartid;
-    }
-
-    public Product getProductProductid() {
-        return productProductid;
-    }
-
-    public void setProductProductid(Product productProductid) {
-        this.productProductid = productProductid;
     }
 
     @Override

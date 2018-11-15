@@ -20,6 +20,7 @@ import jpa.model.Product;
 import jpa.model.controller.ProductJpaController;
 import model.ShoppingCart;
 
+
 /**
  *
  * @author piyao
@@ -43,16 +44,17 @@ UserTransaction utx;
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(true);
+        String productId = request.getParameter("productId");
         ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
         if (cart == null) {
             cart = new ShoppingCart();
             session.setAttribute("cart", cart);
         }
-        String productId = request.getParameter("productId");
+        
         ProductJpaController productJpaCtrl = new ProductJpaController(utx, emf);
-        Product p = productJpaCtrl.findProduct(Integer.valueOf(productId));
+        Product p = productJpaCtrl.findProduct(productId);
         cart.add(p);
-        response.sendRedirect("ProductList");
+        getServletContext().getRequestDispatcher("/ProductList.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

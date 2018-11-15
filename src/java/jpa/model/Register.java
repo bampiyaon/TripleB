@@ -6,7 +6,6 @@
 package jpa.model;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,8 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -29,66 +26,58 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Register.findAll", query = "SELECT r FROM Register r")
-    , @NamedQuery(name = "Register.findByStudentid", query = "SELECT r FROM Register r WHERE r.studentid = :studentid")
-    , @NamedQuery(name = "Register.findByActivatedate", query = "SELECT r FROM Register r WHERE r.activatedate = :activatedate")
-    , @NamedQuery(name = "Register.findByActivatekey", query = "SELECT r FROM Register r WHERE r.activatekey = :activatekey")
-    , @NamedQuery(name = "Register.findByPassword", query = "SELECT r FROM Register r WHERE r.password = :password")
-    , @NamedQuery(name = "Register.findByRegdate", query = "SELECT r FROM Register r WHERE r.regdate = :regdate")})
+    , @NamedQuery(name = "Register.findByUsername", query = "SELECT r FROM Register r WHERE r.username = :username")
+    , @NamedQuery(name = "Register.findByCusfname", query = "SELECT r FROM Register r WHERE r.cusfname = :cusfname")
+    , @NamedQuery(name = "Register.findByCuslname", query = "SELECT r FROM Register r WHERE r.cuslname = :cuslname")
+    , @NamedQuery(name = "Register.findByPassword", query = "SELECT r FROM Register r WHERE r.password = :password")})
 public class Register implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 11)
-    @Column(name = "STUDENTID")
-    private String studentid;
-    @Column(name = "ACTIVATEDATE")
-    @Temporal(TemporalType.DATE)
-    private Date activatedate;
+    @Size(min = 1, max = 15)
+    @Column(name = "USERNAME")
+    private String username;
     @Size(max = 20)
-    @Column(name = "ACTIVATEKEY")
-    private String activatekey;
-    @Size(max = 15)
+    @Column(name = "CUSFNAME")
+    private String cusfname;
+    @Size(max = 30)
+    @Column(name = "CUSLNAME")
+    private String cuslname;
+    @Size(max = 20)
     @Column(name = "PASSWORD")
     private String password;
-    @Column(name = "REGDATE")
-    @Temporal(TemporalType.DATE)
-    private Date regdate;
 
     public Register() {
     }
 
-    public Register(String studentid) {
-        this.studentid = studentid;
+    public Register(String username) {
+        this.username = username;
     }
 
-    public Register(String email, String password) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getUsername() {
+        return username;
     }
 
-    public String getStudentid() {
-        return studentid;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setStudentid(String studentid) {
-        this.studentid = studentid;
+    public String getCusfname() {
+        return cusfname;
     }
 
-    public Date getActivatedate() {
-        return activatedate;
+    public void setCusfname(String cusfname) {
+        this.cusfname = cusfname;
     }
 
-    public void setActivatedate(Date activatedate) {
-        this.activatedate = activatedate;
+    public String getCuslname() {
+        return cuslname;
     }
 
-    public String getActivatekey() {
-        return activatekey;
-    }
-
-    public void setActivatekey(String activatekey) {
-        this.activatekey = activatekey;
+    public void setCuslname(String cuslname) {
+        this.cuslname = cuslname;
     }
 
     public String getPassword() {
@@ -99,18 +88,10 @@ public class Register implements Serializable {
         this.password = password;
     }
 
-    public Date getRegdate() {
-        return regdate;
-    }
-
-    public void setRegdate(Date regdate) {
-        this.regdate = regdate;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (studentid != null ? studentid.hashCode() : 0);
+        hash += (username != null ? username.hashCode() : 0);
         return hash;
     }
 
@@ -121,7 +102,7 @@ public class Register implements Serializable {
             return false;
         }
         Register other = (Register) object;
-        if ((this.studentid == null && other.studentid != null) || (this.studentid != null && !this.studentid.equals(other.studentid))) {
+        if ((this.username == null && other.username != null) || (this.username != null && !this.username.equals(other.username))) {
             return false;
         }
         return true;
@@ -129,7 +110,7 @@ public class Register implements Serializable {
 
     @Override
     public String toString() {
-        return "jpa.model.Register[ studentid=" + studentid + " ]";
+        return "jpa.model.Register[ username=" + username + " ]";
     }
     
 }

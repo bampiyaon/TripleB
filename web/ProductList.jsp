@@ -17,8 +17,7 @@
         <table class="table table-hover">
             <thead>
             <th scope="col">Image</th>
-            <th scope="col">#</th>
-            <th scope="col">Product ID</th>
+            <th scope="col">No.</th>
             <th scope="col">Product Name</th>
             <th scope="col">Shop Name</th>
             <th scope="col">Price(baht)</th>
@@ -28,14 +27,14 @@
 
         <c:forEach items="${products}" var="p" varStatus="vs">
             <tr class="table-info">
-                <td><img src="model-images/${p.productid}.jpg" width="120"></td>
+                <td><img src="picture/${p.productid}.jpg" width="120"></td>
                 <td>${vs.count}</td>
-                <td>${p.productid}</td>
                 <td>${p.productname}</td>
                 <td>${p.shopShopid.shopname}</td>
                 <td>${p.productprince}</td>
                 <td>
-                    <a href="AddItemToCart?productId=${p.productid}">
+                    <a href="AddItemToCart">
+                        
                         <img src="basket.png" width="25"></a>
                 </td>
                 <td>

@@ -8,6 +8,7 @@ package model;
 import java.math.BigDecimal;
 import jpa.model.Product;
 
+
 /**
  *
  * @author piyao
