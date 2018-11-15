@@ -30,8 +30,8 @@
                 <td><img src="picture/${p.productid}.jpg" width="120"></td>
                 <td>${vs.count}</td>
                 <td>${p.productname}</td>
-                <td>${p.shopShopid.shopname}</td>
-                <td>${p.productprince}</td>
+                <td>${p.shopShopid}</td>
+                <td>${p.productprice}</td>
                 <td>
                     <a href="AddItemToCart">
                         

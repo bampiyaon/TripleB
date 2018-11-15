@@ -43,7 +43,7 @@ public class Product implements Serializable {
     @Size(max = 50)
     @Column(name = "PRODUCTNAME")
     private String productname;
-    @Column(name = "PRODUCTPRINCE")
+    @Column(name = "PRODUCTPRICE")
     private Integer productprince;
     @Size(max = 100)
     @Column(name = "PRODUCTDETAIL")
@@ -74,7 +74,7 @@ public class Product implements Serializable {
         this.productname = productname;
     }
 
-    public Integer getProductprince() {
+    public Integer getProductprice() {
         return productprince;
     }
 
