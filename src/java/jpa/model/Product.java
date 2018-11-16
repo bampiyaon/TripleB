@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p")
     , @NamedQuery(name = "Product.findByProductid", query = "SELECT p FROM Product p WHERE p.productid = :productid")
     , @NamedQuery(name = "Product.findByProductname", query = "SELECT p FROM Product p WHERE p.productname = :productname")
-    , @NamedQuery(name = "Product.findByProductprince", query = "SELECT p FROM Product p WHERE p.productprince = :productprince")
+    , @NamedQuery(name = "Product.findByProductprice", query = "SELECT p FROM Product p WHERE p.productprice = :productprice")
     , @NamedQuery(name = "Product.findByProductdetail", query = "SELECT p FROM Product p WHERE p.productdetail = :productdetail")
     , @NamedQuery(name = "Product.findByShopShopid", query = "SELECT p FROM Product p WHERE p.shopShopid = :shopShopid")})
 public class Product implements Serializable {
@@ -44,7 +44,7 @@ public class Product implements Serializable {
     @Column(name = "PRODUCTNAME")
     private String productname;
     @Column(name = "PRODUCTPRICE")
-    private Integer productprince;
+    private Integer productprice;
     @Size(max = 100)
     @Column(name = "PRODUCTDETAIL")
     private String productdetail;
@@ -75,11 +75,11 @@ public class Product implements Serializable {
     }
 
     public Integer getProductprice() {
-        return productprince;
+        return productprice;
     }
 
-    public void setProductprince(Integer productprince) {
-        this.productprince = productprince;
+    public void setProductprice(Integer productprice) {
+        this.productprice = productprice;
     }
 
     public String getProductdetail() {

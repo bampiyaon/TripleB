@@ -43,7 +43,7 @@ UserTransaction utx;
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, RollbackFailureException, Exception {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String cusfname = request.getParameter("cusfname");
@@ -57,16 +57,14 @@ UserTransaction utx;
             String passwordEncrypt=cryptWithMD5(password);
             
             Register register = new Register();
-            register.setPassword(password);
+            register.setUsername(username);
+            register.setPassword(passwordEncrypt);
+            register.setCusfname(cusfname);
+            register.setCuslname(cuslname);
             
             RegisterJpaController regJpaCtrl = new RegisterJpaController(utx, emf);
-            try {
-                regJpaCtrl.create(register);
-            } catch (RollbackFailureException ex) {
-                Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (Exception ex) {
-                Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            regJpaCtrl.create(register);
+            getServletContext().getRequestDispatcher("/productList.jsp").forward(request, response);
         }
         
         getServletContext().getRequestDispatcher("/Register.jsp").forward(request, response);
@@ -100,7 +98,11 @@ UserTransaction utx;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    try {
         processRequest(request, response);
+    } catch (Exception ex) {
+        Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+    }
     }
 
     /**
@@ -114,7 +116,11 @@ UserTransaction utx;
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    try {
         processRequest(request, response);
+    } catch (Exception ex) {
+        Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+    }
     }
 
     /**

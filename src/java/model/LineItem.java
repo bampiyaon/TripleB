@@ -15,7 +15,7 @@ import jpa.model.Product;
  */
 public class LineItem {
     Product product;
-    BigDecimal salePrice;
+    Double salePrice;
     int quantity;
 
     public LineItem() {
@@ -30,8 +30,8 @@ public class LineItem {
         this(product,1);
     }
     
-    public BigDecimal getTotalPrice(){
-        return this.salePrice.multiply(new BigDecimal(this.quantity));
+    public Double getTotalPrice(){
+        return this.salePrice * this.quantity;
     }
 
     public Product getProduct() {
@@ -42,11 +42,11 @@ public class LineItem {
         this.product = product;
     }
 
-    public BigDecimal getSalePrice() {
+    public Double getSalePrice() {
         return salePrice;
     }
 
-    public void setSalePrice(BigDecimal salePrice) {
+    public void setSalePrice(Double salePrice) {
         this.salePrice = salePrice;
     }
 

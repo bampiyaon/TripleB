@@ -54,7 +54,7 @@ UserTransaction utx;
         ProductJpaController productJpaCtrl = new ProductJpaController(utx, emf);
         Product p = productJpaCtrl.findProduct(productId);
         cart.add(p);
-        getServletContext().getRequestDispatcher("/ProductList.jsp").forward(request, response);
+       response.sendRedirect("ProductList");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

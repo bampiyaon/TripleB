@@ -42,11 +42,11 @@ public class ShoppingCart implements Serializable {
         cart.remove(productCode);
     }
     
-    public BigDecimal getTotalPrice(){
-        BigDecimal sum = BigDecimal.ZERO ;
+    public Double getTotalPrice(){
+        Double sum = 0d ;
         Collection<LineItem> lineItems = cart.values();
         for (LineItem lineItem : lineItems) {
-            sum = sum.add( lineItem.getTotalPrice());
+            sum += lineItem.getTotalPrice();
         }
         return sum;
     }

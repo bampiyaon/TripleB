@@ -33,9 +33,10 @@
                 <td>${p.shopShopid}</td>
                 <td>${p.productprice}</td>
                 <td>
-                    <a href="AddItemToCart">
-                        
-                        <img src="basket.png" width="25"></a>
+                    <form action="AddItemToCart" method = "post">
+                        <input type = "hidden" name = "productId" value="${p.productid}">
+                        <input type = "image" src="basket.png" width="25" alt = "Add">
+                    </form>
                 </td>
                 <td>
                     <a href="RemoveToCart?productId=${p.productid}">
