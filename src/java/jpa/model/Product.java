@@ -28,9 +28,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p")
     , @NamedQuery(name = "Product.findByProductid", query = "SELECT p FROM Product p WHERE p.productid = :productid")
     , @NamedQuery(name = "Product.findByProductname", query = "SELECT p FROM Product p WHERE p.productname = :productname")
-    , @NamedQuery(name = "Product.findByProductprice", query = "SELECT p FROM Product p WHERE p.productprice = :productprice")
-    , @NamedQuery(name = "Product.findByProductdetail", query = "SELECT p FROM Product p WHERE p.productdetail = :productdetail")
-    , @NamedQuery(name = "Product.findByShopShopid", query = "SELECT p FROM Product p WHERE p.shopShopid = :shopShopid")})
+    , @NamedQuery(name = "Product.findByPrice", query = "SELECT p FROM Product p WHERE p.price = :price")
+    , @NamedQuery(name = "Product.findByDescription", query = "SELECT p FROM Product p WHERE p.description = :description")})
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,22 +39,30 @@ public class Product implements Serializable {
     @Size(min = 1, max = 10)
     @Column(name = "PRODUCTID")
     private String productid;
-    @Size(max = 50)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
     @Column(name = "PRODUCTNAME")
     private String productname;
-    @Column(name = "PRODUCTPRICE")
-    private Integer productprice;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "PRICE")
+    private int price;
     @Size(max = 100)
-    @Column(name = "PRODUCTDETAIL")
-    private String productdetail;
-    @Column(name = "SHOP_SHOPID")
-    private Integer shopShopid;
+    @Column(name = "DESCRIPTION")
+    private String description;
 
     public Product() {
     }
 
     public Product(String productid) {
         this.productid = productid;
+    }
+
+    public Product(String productid, String productname, int price) {
+        this.productid = productid;
+        this.productname = productname;
+        this.price = price;
     }
 
     public String getProductid() {
@@ -74,28 +81,20 @@ public class Product implements Serializable {
         this.productname = productname;
     }
 
-    public Integer getProductprice() {
-        return productprice;
+    public int getPrice() {
+        return price;
     }
 
-    public void setProductprice(Integer productprice) {
-        this.productprice = productprice;
+    public void setPrice(int price) {
+        this.price = price;
     }
 
-    public String getProductdetail() {
-        return productdetail;
+    public String getDescription() {
+        return description;
     }
 
-    public void setProductdetail(String productdetail) {
-        this.productdetail = productdetail;
-    }
-
-    public Integer getShopShopid() {
-        return shopShopid;
-    }
-
-    public void setShopShopid(Integer shopShopid) {
-        this.shopShopid = shopShopid;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

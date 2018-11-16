@@ -10,7 +10,8 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import jpa.model.Customer;
+import jpa.model.Payment;
+import jpa.model.Account;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -40,28 +41,33 @@ public class OrdersJpaController implements Serializable {
     }
 
     public void create(Orders orders) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (orders.getCustomerList() == null) {
-            orders.setCustomerList(new ArrayList<Customer>());
-        }
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            List<Customer> attachedCustomerList = new ArrayList<Customer>();
-            for (Customer customerListCustomerToAttach : orders.getCustomerList()) {
-                customerListCustomerToAttach = em.getReference(customerListCustomerToAttach.getClass(), customerListCustomerToAttach.getCustomerid());
-                attachedCustomerList.add(customerListCustomerToAttach);
+            Payment payment = orders.getPayment();
+            if (payment != null) {
+                payment = em.getReference(payment.getClass(), payment.getPaymentid());
+                orders.setPayment(payment);
             }
-            orders.setCustomerList(attachedCustomerList);
+            Account username = orders.getUsername();
+            if (username != null) {
+                username = em.getReference(username.getClass(), username.getUsername());
+                orders.setUsername(username);
+            }
             em.persist(orders);
-            for (Customer customerListCustomer : orders.getCustomerList()) {
-                Orders oldOrderOrderidOfCustomerListCustomer = customerListCustomer.getOrderOrderid();
-                customerListCustomer.setOrderOrderid(orders);
-                customerListCustomer = em.merge(customerListCustomer);
-                if (oldOrderOrderidOfCustomerListCustomer != null) {
-                    oldOrderOrderidOfCustomerListCustomer.getCustomerList().remove(customerListCustomer);
-                    oldOrderOrderidOfCustomerListCustomer = em.merge(oldOrderOrderidOfCustomerListCustomer);
+            if (payment != null) {
+                Orders oldOrderidOfPayment = payment.getOrderid();
+                if (oldOrderidOfPayment != null) {
+                    oldOrderidOfPayment.setPayment(null);
+                    oldOrderidOfPayment = em.merge(oldOrderidOfPayment);
                 }
+                payment.setOrderid(orders);
+                payment = em.merge(payment);
+            }
+            if (username != null) {
+                username.getOrdersList().add(orders);
+                username = em.merge(username);
             }
             utx.commit();
         } catch (Exception ex) {
@@ -87,38 +93,45 @@ public class OrdersJpaController implements Serializable {
             utx.begin();
             em = getEntityManager();
             Orders persistentOrders = em.find(Orders.class, orders.getOrderid());
-            List<Customer> customerListOld = persistentOrders.getCustomerList();
-            List<Customer> customerListNew = orders.getCustomerList();
+            Payment paymentOld = persistentOrders.getPayment();
+            Payment paymentNew = orders.getPayment();
+            Account usernameOld = persistentOrders.getUsername();
+            Account usernameNew = orders.getUsername();
             List<String> illegalOrphanMessages = null;
-            for (Customer customerListOldCustomer : customerListOld) {
-                if (!customerListNew.contains(customerListOldCustomer)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Customer " + customerListOldCustomer + " since its orderOrderid field is not nullable.");
+            if (paymentOld != null && !paymentOld.equals(paymentNew)) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
                 }
+                illegalOrphanMessages.add("You must retain Payment " + paymentOld + " since its orderid field is not nullable.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<Customer> attachedCustomerListNew = new ArrayList<Customer>();
-            for (Customer customerListNewCustomerToAttach : customerListNew) {
-                customerListNewCustomerToAttach = em.getReference(customerListNewCustomerToAttach.getClass(), customerListNewCustomerToAttach.getCustomerid());
-                attachedCustomerListNew.add(customerListNewCustomerToAttach);
+            if (paymentNew != null) {
+                paymentNew = em.getReference(paymentNew.getClass(), paymentNew.getPaymentid());
+                orders.setPayment(paymentNew);
             }
-            customerListNew = attachedCustomerListNew;
-            orders.setCustomerList(customerListNew);
+            if (usernameNew != null) {
+                usernameNew = em.getReference(usernameNew.getClass(), usernameNew.getUsername());
+                orders.setUsername(usernameNew);
+            }
             orders = em.merge(orders);
-            for (Customer customerListNewCustomer : customerListNew) {
-                if (!customerListOld.contains(customerListNewCustomer)) {
-                    Orders oldOrderOrderidOfCustomerListNewCustomer = customerListNewCustomer.getOrderOrderid();
-                    customerListNewCustomer.setOrderOrderid(orders);
-                    customerListNewCustomer = em.merge(customerListNewCustomer);
-                    if (oldOrderOrderidOfCustomerListNewCustomer != null && !oldOrderOrderidOfCustomerListNewCustomer.equals(orders)) {
-                        oldOrderOrderidOfCustomerListNewCustomer.getCustomerList().remove(customerListNewCustomer);
-                        oldOrderOrderidOfCustomerListNewCustomer = em.merge(oldOrderOrderidOfCustomerListNewCustomer);
-                    }
+            if (paymentNew != null && !paymentNew.equals(paymentOld)) {
+                Orders oldOrderidOfPayment = paymentNew.getOrderid();
+                if (oldOrderidOfPayment != null) {
+                    oldOrderidOfPayment.setPayment(null);
+                    oldOrderidOfPayment = em.merge(oldOrderidOfPayment);
                 }
+                paymentNew.setOrderid(orders);
+                paymentNew = em.merge(paymentNew);
+            }
+            if (usernameOld != null && !usernameOld.equals(usernameNew)) {
+                usernameOld.getOrdersList().remove(orders);
+                usernameOld = em.merge(usernameOld);
+            }
+            if (usernameNew != null && !usernameNew.equals(usernameOld)) {
+                usernameNew.getOrdersList().add(orders);
+                usernameNew = em.merge(usernameNew);
             }
             utx.commit();
         } catch (Exception ex) {
@@ -129,7 +142,7 @@ public class OrdersJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                String id = orders.getOrderid();
+                Integer id = orders.getOrderid();
                 if (findOrders(id) == null) {
                     throw new NonexistentEntityException("The orders with id " + id + " no longer exists.");
                 }
@@ -142,7 +155,7 @@ public class OrdersJpaController implements Serializable {
         }
     }
 
-    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
@@ -155,15 +168,20 @@ public class OrdersJpaController implements Serializable {
                 throw new NonexistentEntityException("The orders with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Customer> customerListOrphanCheck = orders.getCustomerList();
-            for (Customer customerListOrphanCheckCustomer : customerListOrphanCheck) {
+            Payment paymentOrphanCheck = orders.getPayment();
+            if (paymentOrphanCheck != null) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Orders (" + orders + ") cannot be destroyed since the Customer " + customerListOrphanCheckCustomer + " in its customerList field has a non-nullable orderOrderid field.");
+                illegalOrphanMessages.add("This Orders (" + orders + ") cannot be destroyed since the Payment " + paymentOrphanCheck + " in its payment field has a non-nullable orderid field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            Account username = orders.getUsername();
+            if (username != null) {
+                username.getOrdersList().remove(orders);
+                username = em.merge(username);
             }
             em.remove(orders);
             utx.commit();
@@ -205,7 +223,7 @@ public class OrdersJpaController implements Serializable {
         }
     }
 
-    public Orders findOrders(String id) {
+    public Orders findOrders(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Orders.class, id);

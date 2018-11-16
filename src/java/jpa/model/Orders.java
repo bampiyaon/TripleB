@@ -7,22 +7,22 @@ package jpa.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -35,40 +35,47 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Orders.findAll", query = "SELECT o FROM Orders o")
     , @NamedQuery(name = "Orders.findByOrderid", query = "SELECT o FROM Orders o WHERE o.orderid = :orderid")
     , @NamedQuery(name = "Orders.findByOrderdate", query = "SELECT o FROM Orders o WHERE o.orderdate = :orderdate")
+    , @NamedQuery(name = "Orders.findByOrderstatus", query = "SELECT o FROM Orders o WHERE o.orderstatus = :orderstatus")
     , @NamedQuery(name = "Orders.findByShipdate", query = "SELECT o FROM Orders o WHERE o.shipdate = :shipdate")
-    , @NamedQuery(name = "Orders.findByOrdertotal", query = "SELECT o FROM Orders o WHERE o.ordertotal = :ordertotal")})
+    , @NamedQuery(name = "Orders.findByShipto", query = "SELECT o FROM Orders o WHERE o.shipto = :shipto")})
 public class Orders implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 10)
     @Column(name = "ORDERID")
-    private String orderid;
+    private Integer orderid;
     @Column(name = "ORDERDATE")
     @Temporal(TemporalType.DATE)
     private Date orderdate;
+    @Size(max = 10)
+    @Column(name = "ORDERSTATUS")
+    private String orderstatus;
     @Column(name = "SHIPDATE")
     @Temporal(TemporalType.DATE)
     private Date shipdate;
-    @Column(name = "ORDERTOTAL")
-    private Integer ordertotal;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderOrderid")
-    private List<Customer> customerList;
+    @Size(max = 30)
+    @Column(name = "SHIPTO")
+    private String shipto;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "orderid")
+    private Payment payment;
+    @JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME")
+    @ManyToOne(optional = false)
+    private Account username;
 
     public Orders() {
     }
 
-    public Orders(String orderid) {
+    public Orders(Integer orderid) {
         this.orderid = orderid;
     }
 
-    public String getOrderid() {
+    public Integer getOrderid() {
         return orderid;
     }
 
-    public void setOrderid(String orderid) {
+    public void setOrderid(Integer orderid) {
         this.orderid = orderid;
     }
 
@@ -80,6 +87,14 @@ public class Orders implements Serializable {
         this.orderdate = orderdate;
     }
 
+    public String getOrderstatus() {
+        return orderstatus;
+    }
+
+    public void setOrderstatus(String orderstatus) {
+        this.orderstatus = orderstatus;
+    }
+
     public Date getShipdate() {
         return shipdate;
     }
@@ -88,21 +103,28 @@ public class Orders implements Serializable {
         this.shipdate = shipdate;
     }
 
-    public Integer getOrdertotal() {
-        return ordertotal;
+    public String getShipto() {
+        return shipto;
     }
 
-    public void setOrdertotal(Integer ordertotal) {
-        this.ordertotal = ordertotal;
+    public void setShipto(String shipto) {
+        this.shipto = shipto;
     }
 
-    @XmlTransient
-    public List<Customer> getCustomerList() {
-        return customerList;
+    public Payment getPayment() {
+        return payment;
     }
 
-    public void setCustomerList(List<Customer> customerList) {
-        this.customerList = customerList;
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
+    public Account getUsername() {
+        return username;
+    }
+
+    public void setUsername(Account username) {
+        this.username = username;
     }
 
     @Override

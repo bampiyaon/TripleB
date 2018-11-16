@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.UserTransaction;
-import jpa.model.Customer;
-import jpa.model.controller.CustomerJpaController;
+import jpa.model.Account;
+import jpa.model.controller.AccountJpaController;
 
 
 /**
@@ -46,12 +46,12 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         if (username != null && username.trim().length() > 0 && password != null && password.trim().length() > 0) {
-            CustomerJpaController customerJpaCtrl = new CustomerJpaController(utx, emf);
-            Customer customer = customerJpaCtrl.findCustomer(username);
+            AccountJpaController customerJpaCtrl = new AccountJpaController(utx, emf);
+            Account customer = customerJpaCtrl.findAccount(Integer.valueOf(username));
 
             if (customer != null && password.equals(customer.getPassword())) {
                 request.getSession().setAttribute("customer", customer);
-                getServletContext().getRequestDispatcher("/index.html").forward(request, response);
+                getServletContext().getRequestDispatcher("/ProductList").forward(request, response);
                 return;
             }
             request.setAttribute("loginfailed", "Invalid username or password, Please re-enter");

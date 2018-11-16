@@ -6,18 +6,15 @@
 package jpa.model;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -32,75 +29,69 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Payment.findAll", query = "SELECT p FROM Payment p")
     , @NamedQuery(name = "Payment.findByPaymentid", query = "SELECT p FROM Payment p WHERE p.paymentid = :paymentid")
-    , @NamedQuery(name = "Payment.findByPaymentdate", query = "SELECT p FROM Payment p WHERE p.paymentdate = :paymentdate")
-    , @NamedQuery(name = "Payment.findByPaymentmethod", query = "SELECT p FROM Payment p WHERE p.paymentmethod = :paymentmethod")
-    , @NamedQuery(name = "Payment.findByPaymenttotal", query = "SELECT p FROM Payment p WHERE p.paymenttotal = :paymenttotal")})
+    , @NamedQuery(name = "Payment.findByMethods", query = "SELECT p FROM Payment p WHERE p.methods = :methods")
+    , @NamedQuery(name = "Payment.findByTotalprice", query = "SELECT p FROM Payment p WHERE p.totalprice = :totalprice")})
 public class Payment implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 10)
     @Column(name = "PAYMENTID")
-    private String paymentid;
-    @Column(name = "PAYMENTDATE")
-    @Temporal(TemporalType.DATE)
-    private Date paymentdate;
-    @Size(max = 20)
-    @Column(name = "PAYMENTMETHOD")
-    private String paymentmethod;
-    @Column(name = "PAYMENTTOTAL")
-    private Integer paymenttotal;
-    @JoinColumn(name = "CUSTOMER_CUSTOMERID", referencedColumnName = "CUSTOMERID")
-    @ManyToOne(optional = false)
-    private Customer customerCustomerid;
+    private Integer paymentid;
+    @Size(max = 30)
+    @Column(name = "METHODS")
+    private String methods;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "TOTALPRICE")
+    private int totalprice;
+    @JoinColumn(name = "ORDERID", referencedColumnName = "ORDERID")
+    @OneToOne(optional = false)
+    private Orders orderid;
 
     public Payment() {
     }
 
-    public Payment(String paymentid) {
+    public Payment(Integer paymentid) {
         this.paymentid = paymentid;
     }
 
-    public String getPaymentid() {
+    public Payment(Integer paymentid, int totalprice) {
+        this.paymentid = paymentid;
+        this.totalprice = totalprice;
+    }
+
+    public Integer getPaymentid() {
         return paymentid;
     }
 
-    public void setPaymentid(String paymentid) {
+    public void setPaymentid(Integer paymentid) {
         this.paymentid = paymentid;
     }
 
-    public Date getPaymentdate() {
-        return paymentdate;
+    public String getMethods() {
+        return methods;
     }
 
-    public void setPaymentdate(Date paymentdate) {
-        this.paymentdate = paymentdate;
+    public void setMethods(String methods) {
+        this.methods = methods;
     }
 
-    public String getPaymentmethod() {
-        return paymentmethod;
+    public int getTotalprice() {
+        return totalprice;
     }
 
-    public void setPaymentmethod(String paymentmethod) {
-        this.paymentmethod = paymentmethod;
+    public void setTotalprice(int totalprice) {
+        this.totalprice = totalprice;
     }
 
-    public Integer getPaymenttotal() {
-        return paymenttotal;
+    public Orders getOrderid() {
+        return orderid;
     }
 
-    public void setPaymenttotal(Integer paymenttotal) {
-        this.paymenttotal = paymenttotal;
-    }
-
-    public Customer getCustomerCustomerid() {
-        return customerCustomerid;
-    }
-
-    public void setCustomerCustomerid(Customer customerCustomerid) {
-        this.customerCustomerid = customerCustomerid;
+    public void setOrderid(Orders orderid) {
+        this.orderid = orderid;
     }
 
     @Override

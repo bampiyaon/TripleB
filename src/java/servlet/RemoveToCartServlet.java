@@ -25,11 +25,13 @@ import model.ShoppingCart;
  * @author piyao
  */
 public class RemoveToCartServlet extends HttpServlet {
-@PersistenceUnit (unitName = "WebAppProjPU")
-EntityManagerFactory emf;
 
-@Resource
-UserTransaction utx;
+    @PersistenceUnit(unitName = "WebAppProjPU")
+    EntityManagerFactory emf;
+
+    @Resource
+    UserTransaction utx;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -41,7 +43,7 @@ UserTransaction utx;
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-                HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(true);
         ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
         if (cart == null) {
             cart = new ShoppingCart();
@@ -52,7 +54,7 @@ UserTransaction utx;
         Product p = productJpaCtrl.findProduct(productId);
         cart.remove(p);
         response.sendRedirect("ProductList");
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -19,10 +19,9 @@
             <th scope="col">Image</th>
             <th scope="col">No.</th>
             <th scope="col">Product Name</th>
-            <th scope="col">Shop Name</th>
             <th scope="col">Price(baht)</th>
+            <th scope="col">calories</th>
             <th scope="col">Add</th>
-            <th scope="col">Remove</th>
         </thead>
 
         <c:forEach items="${products}" var="p" varStatus="vs">
@@ -30,19 +29,15 @@
                 <td><img src="picture/${p.productid}.jpg" width="120"></td>
                 <td>${vs.count}</td>
                 <td>${p.productname}</td>
-                <td>${p.shopShopid}</td>
-                <td>${p.productprice}</td>
+                <td>${p.price}</td>                
+                <td>${p.description}</td>
                 <td>
                     <form action="AddItemToCart" method = "post">
                         <input type = "hidden" name = "productId" value="${p.productid}">
                         <input type = "image" src="basket.png" width="25" alt = "Add">
                     </form>
                 </td>
-                <td>
-                    <a href="RemoveToCart?productId=${p.productid}">
-                        <img src="bin.png" width="25"></a>
-                    </a>
-                </td>
+                
             </tr>
         </c:forEach>        
     </table>

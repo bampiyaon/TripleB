@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.UserTransaction;
-import jpa.model.Register;
-import jpa.model.controller.RegisterJpaController;
+import jpa.model.Account;
+import jpa.model.controller.AccountJpaController;
 import jpa.model.controller.exceptions.RollbackFailureException;
 
 /**
@@ -44,47 +44,81 @@ UserTransaction utx;
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, RollbackFailureException, Exception {
+        
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String cusfname = request.getParameter("cusfname");
-        String cuslname = request.getParameter("cuslname");
-
-        if (username != null && username.trim().length() > 0 && 
-            password != null && password.trim().length() > 0 &&
-            cusfname != null && cusfname.trim().length() > 0 && 
-            cuslname != null && cuslname.trim().length() > 0 ) {
-            
-            String passwordEncrypt=cryptWithMD5(password);
-            
-            Register register = new Register();
-            register.setUsername(username);
-            register.setPassword(passwordEncrypt);
-            register.setCusfname(cusfname);
-            register.setCuslname(cuslname);
-            
-            RegisterJpaController regJpaCtrl = new RegisterJpaController(utx, emf);
-            regJpaCtrl.create(register);
-            getServletContext().getRequestDispatcher("/productList.jsp").forward(request, response);
-        }
+        String firstname = request.getParameter("firstname");
+        String lastname = request.getParameter("lastname");
         
-        getServletContext().getRequestDispatcher("/Register.jsp").forward(request, response);
-    }
-    public static String cryptWithMD5(String pass) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] passBytes = pass.getBytes();
-            md.reset();
-            byte[] digested = md.digest(passBytes);
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < digested.length; i++) {
-                sb.append(Integer.toHexString(0xff & digested[i]));
-            }
-            return sb.toString();
-        } catch (NoSuchAlgorithmException ex) {
-            System.out.println(ex);
+        
+        if (username != null && password != null && firstname != null && lastname != null) {
+                if (username.trim().length() > 0 && password.trim().length() > 0 && firstname.trim().length() > 0
+                        && lastname.trim().length() > 0) {
+                    AccountJpaController actrl = new AccountJpaController(utx, emf);
+                    Account account = new Account(actrl.getAccountCount() + 1);
+                    int userInt = Integer.parseInt(username);
+                    
+                    account.setFirstname(firstname);
+                    account.setLastname(lastname);
+                    account.setUsername(userInt);
+                    account.setPassword(password);
+
+                    try {
+                        actrl.create(account);
+                        actrl.edit(account);
+                    } catch (RollbackFailureException ex) {
+                        Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    getServletContext().getRequestDispatcher("/ProductList").forward(request, response);
+                }
         }
-        return null;
+        request.setAttribute("message", "error");
+        getServletContext().getRequestDispatcher("/Register.jsp").forward(request, response);
+        
     }
+//        String username = request.getParameter("username");
+//        String password = request.getParameter("password");
+//        String cusfname = request.getParameter("cusfname");
+//        String cuslname = request.getParameter("cuslname");
+//
+//        if (username != null && username.trim().length() > 0 && 
+//            password != null && password.trim().length() > 0 &&
+//            cusfname != null && cusfname.trim().length() > 0 && 
+//            cuslname != null && cuslname.trim().length() > 0 ) {
+//            
+//            String passwordEncrypt=cryptWithMD5(password);
+//            
+//            Register register = new Register();
+//            register.setUsername(username);
+//            register.setPassword(passwordEncrypt);
+//            register.setCusfname(cusfname);
+//            register.setCuslname(cuslname);
+//            
+//            RegisterJpaController regJpaCtrl = new RegisterJpaController(utx, emf);
+//            regJpaCtrl.create(register);
+//            getServletContext().getRequestDispatcher("/productList.jsp").forward(request, response);
+//        }
+//        
+//        getServletContext().getRequestDispatcher("/Register.jsp").forward(request, response);
+//    }
+//    public static String cryptWithMD5(String pass) {
+//        try {
+//            MessageDigest md = MessageDigest.getInstance("MD5");
+//            byte[] passBytes = pass.getBytes();
+//            md.reset();
+//            byte[] digested = md.digest(passBytes);
+//            StringBuffer sb = new StringBuffer();
+//            for (int i = 0; i < digested.length; i++) {
+//                sb.append(Integer.toHexString(0xff & digested[i]));
+//            }
+//            return sb.toString();
+//        } catch (NoSuchAlgorithmException ex) {
+//            System.out.println(ex);
+//        }
+//        return null;
+//    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

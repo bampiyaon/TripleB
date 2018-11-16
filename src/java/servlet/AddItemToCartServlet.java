@@ -50,7 +50,6 @@ UserTransaction utx;
             cart = new ShoppingCart();
             session.setAttribute("cart", cart);
         }
-        
         ProductJpaController productJpaCtrl = new ProductJpaController(utx, emf);
         Product p = productJpaCtrl.findProduct(productId);
         cart.add(p);

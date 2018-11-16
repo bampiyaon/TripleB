@@ -21,7 +21,7 @@
                 <table class="table">
                     <tr>
                         <td>Username :</td>
-                        <td><input type="number" name="userName" required</td>
+                        <td><input type="number" name="username" required</td>
                     </tr>
                     <tr>
                         <td>Password :</td>
