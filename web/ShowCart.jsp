@@ -1,7 +1,7 @@
 <%-- 
-    Document   : ShowCartView
+    Document   : ShowCart
     Created on : Aug 9, 2018, 4:16:07 PM
-    Author     : INT303
+    Author     : piyo
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -26,11 +26,11 @@
             <th>Product ID</th>
             <th>Product Name</th>
         </thead>
-        
+
         <c:set var="items" value="${sessionScope.cart.lineItems}"/>
         <c:set var="bgColorX" value="lightgray" />
         <c:set var="bgColorY" value="white" />
-        
+
         <c:forEach items="${cart.lineItems}" var="line" varStatus="vs">
             <tr style="background-color: ${vs.count%2==1 ? bgColorX:colrY}">
                 <td><img src="logo_big.png" width="120"></td>
@@ -39,13 +39,16 @@
                 <td>${line.product.productname}</td>
             </tr>
         </c:forEach>
-            <tr>
-                <td colspan="4"></td>
-                
-                <td>${cart.totalQuantity}</td>
-                <td></td>
-                <td>${cart.totalPrice}</td>
-            </tr>
+        <tr>
+            <td colspan="4"></td>
+
+            <td>${cart.totalQuantity}</td>
+            <td></td>
+            <td>${cart.totalPrice}</td>
+        </tr> 
     </table>
+    <form action="Login" method="post">
+        <td><button type="button" class="btn btn-primary">Check out</button></td>
+    </form>
 </body>
 </html>
