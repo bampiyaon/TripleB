@@ -16,9 +16,10 @@
 
         <jsp:include page="include/Header.jsp?title=Login"/> 
         <div class="container">
-            <form action="Login" method="post">
-                <!--<div class="btn-group-vertical" data-toggle="buttons">-->
-                <table class="table">
+            <table class="table">
+                <form action="Login" method="post">
+                    <!--<div class="btn-group-vertical" data-toggle="buttons">-->
+
                     <tr>
                         <td>Username :</td>
                         <td><input type="number" name="username" required</td>
@@ -30,12 +31,17 @@
                     <tr>
                         <td></td>
                         <td><input type="submit" class="btn btn-primary" value="Login"</td>
+
                     </tr>
                     <tr>
                         <td colspan="2"><p style="color: red">${loginfailed}</p></td>
+                        <td><input type="submit" class="btn btn-link" value="Register"></td>
                     </tr>
-                </table>
+                </form>  
+                <form action="Register" method="post"> 
+                </form>  
+            </table>   
         </div>
-    </form>
-</body>
+
+    </body>
 </html>

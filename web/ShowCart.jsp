@@ -50,7 +50,7 @@
         </tr> 
     </table>
     <form action="Login" method="post">
-        <td><input type="button" class="btn btn-primary">Check out</button></td>
+        <input type="submit" class="btn btn-primary" value="Check out">
     </form>
 </body>
 </html>
