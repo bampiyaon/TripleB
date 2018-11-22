@@ -11,11 +11,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
-        <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://bootswatch.com/4/journal/bootstrap.min.css">
     </head>
     <body>
         <jsp:include page="include/Header.jsp?title=Your Cart::"/>
@@ -25,6 +21,9 @@
             <th>#</th>
             <th>Product ID</th>
             <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total Price</th>
         </thead>
 
         <c:set var="items" value="${sessionScope.cart.lineItems}"/>
@@ -33,10 +32,13 @@
 
         <c:forEach items="${cart.lineItems}" var="line" varStatus="vs">
             <tr style="background-color: ${vs.count%2==1 ? bgColorX:colrY}">
-                <td><img src="logo_big.png" width="120"></td>
+                <td><img src="picture/${line.product.productid}.jpg" width="120"></td>
                 <td>${vs.count}</td>
                 <td>${line.product.productid}</td>
                 <td>${line.product.productname}</td>
+                <td>${line.quantity}</td>
+                <td>${line.product.price}</td>
+                <td>${line.totalPrice}</td>
             </tr>
         </c:forEach>
         <tr>
@@ -48,7 +50,7 @@
         </tr> 
     </table>
     <form action="Login" method="post">
-        <td><button type="button" class="btn btn-primary">Check out</button></td>
+        <td><input type="button" class="btn btn-primary">Check out</button></td>
     </form>
 </body>
 </html>

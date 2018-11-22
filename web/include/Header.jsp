@@ -40,7 +40,7 @@
             &nbsp;&nbsp;&nbsp;
             <c:choose>
                 <c:when test="${sessionScope.customer != null}">
-                    Hello ${sessionScope.customer.username}
+                    Hello ${sessionScope.customer.firstname}
                 </c:when>
                 <c:otherwise>
                     <button type="button" class="btn btn-primary">Hello Guest</button>
