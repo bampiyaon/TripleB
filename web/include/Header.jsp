@@ -35,7 +35,7 @@
             </li>
             &nbsp;&nbsp;&nbsp;
             <c:if test="${cart != null}">
-                <a class="navbar-brand" href="ShowCart" title="Cart"><img src="basket.png" width="25"></a>
+                <a class="navbar-brand" href="ShowCart" title="Cart"><img src="basket.png" width="25">${cart.totalQuantity}</a>
                 </c:if>
             &nbsp;&nbsp;&nbsp;
             <c:choose>

@@ -28,6 +28,7 @@ public class LineItem {
 
     public LineItem(Product product) {
         this(product,1);
+        this.salePrice = this.product.getPrice();
     }
     
     public Double getTotalPrice(){
