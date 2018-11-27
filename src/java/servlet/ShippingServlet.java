@@ -7,29 +7,17 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Resource;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.UserTransaction;
-import jpa.model.Product;
-import jpa.model.controller.ProductJpaController;
 
 /**
  *
  * @author piyao
  */
-public class SearchServlet extends HttpServlet {
-@PersistenceUnit (unitName = "WebAppProjPU")
-EntityManagerFactory emf;
+public class ShippingServlet extends HttpServlet {
 
-@Resource
-UserTransaction utx;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -41,40 +29,6 @@ UserTransaction utx;
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String keyword = request.getParameter("keyword");
-        String searchOption = request.getParameter("searchOption");
-        
-        if (keyword != null && keyword.trim().length() > 0 && searchOption != null && searchOption.trim().length() > 0) {
-            
-            keyword = keyword.trim().toLowerCase();
-            searchOption = searchOption.trim().toLowerCase();
-            
-            ProductJpaController productJpaCtrl = new ProductJpaController(utx, emf);
-            List<Product> productList = productJpaCtrl.findProductEntities();
-            List<Product> products = new ArrayList<>();
-            
-            if (productList != null) {
-                for (Product product : products) {
-                    if (product.getProductid().toLowerCase().contains(keyword)
-                            || product.getProductname().toLowerCase().contains(keyword)) {
-                        products.add(product);
-                    }
-                    
-                }
-            }
-            
-            if (!searchOption.equalsIgnoreCase("all")) {
-                if (products != null) {
-                    for (Product product : products) {
-                        if (!product.getProductname().equalsIgnoreCase(searchOption)) {
-                            products.remove(product);
-                        }
-                    }
-                }
-            }
-            request.setAttribute("products", products);
-            getServletContext().getRequestDispatcher("/ProductList.jsp").forward(request, response);
-        }
         
     }
 

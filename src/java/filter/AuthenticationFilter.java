@@ -36,7 +36,6 @@ public class AuthenticationFilter implements Filter {
         HttpSession session = ((HttpServletRequest) request).getSession(false);
         if (session == null || session.getAttribute("user") == null) {
             config.getServletContext().getRequestDispatcher("/Login").forward(request, response);
-            return;
         } else {
             chain.doFilter(request, response);
         }

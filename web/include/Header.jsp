@@ -43,22 +43,22 @@
                     Hello <a href="Logout">${sessionScope.customer.firstname},</a>
                 </c:when>
                 <c:otherwise>
-                    <a href="Login.jsp" class="btn btn-primary">Hello Guest</a>
+                    <a href="Login">Hello Guest</a>
                 </c:otherwise>
             </c:choose>
             <form action = "Search" class="form-inline my-2 my-lg-0">
                 <select name = "searchOption" required class="form-control">
                     <option value = "all">All</option>
-                    <option value = "">Uncle Num Square</option>
-                    <option value = "">Jaidee Shop</option>
-                    <option value = "">Mana Shop</option>
-                    <option value = "">Islamic Food Shop</option>
-                    <option value = "">KFC Shop no.1</option>
-                    <option value = "">KFC Shop no.2</option>
-                    <option value = "">KFC Shop no.3</option>
-                    <option value = "">KFC Shop no.4</option>
-                    <option value = "">KFC Shop no.5</option>
-                    <option value = "">KFC Shop no.6</option>
+                    <option value = "uncleNumSquare">Uncle Num Square</option>
+                    <option value = "jaideeShop">Jaidee Shop</option>
+                    <option value = "manaShop">Mana Shop</option>
+                    <option value = "islamicFoodShop">Islamic Food Shop</option>
+                    <option value = "KFCShopNo1">KFC Shop no.1</option>
+                    <option value = "KFCShopNo2">KFC Shop no.2</option>
+                    <option value = "KFCShopNo3">KFC Shop no.3</option>
+                    <option value = "KFCShopNo4">KFC Shop no.4</option>
+                    <option value = "KFCShopNo5">KFC Shop no.5</option>
+                    <option value = "KFCShopNo6">KFC Shop no.6</option>
                 </select>
                 <input class="form-control mr-sm-2" type = "text" name = "search" placeholder="Search">
                 <input class="btn btn-secondary my-2 my-sm-0" type = "submit" value = "Search">
