@@ -26,12 +26,12 @@
                     </div>
                     <div class="form-group">
                         <label for="lastname">Your Lastname</label>
-                        <input type="text" class="form-control" id="InputStudentId" aria-describedby="emailHelp" placeholder="Enter your lastname" name="lastname" required>
+                        <input type="text" class="form-control" id="InputStudentId" placeholder="Enter your lastname" name="lastname" required>
                         <small id="emailHelp" class="form-text text-muted">Please Enter in English</small>
                     </div>
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="number" class="form-control" id="InputStudentId" aria-describedby="emailHelp" placeholder="Enter student ID ex.60xxxxxxxxx" name="username" required>
+                        <input type="number" class="form-control" id="InputStudentId" placeholder="Enter student ID ex.60xxxxxxxxx" name="username" required>
                         <small id="emailHelp" class="form-text text-muted">Please use your student id</small>
                     </div>
                     <div class="form-group">
@@ -41,7 +41,7 @@
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
-                    <div colspan="2"><p style="color: red">${message}</p></div>
+                    <p style="color: red">${message}</p>
                 </fieldset>
             </form>  
         </div>

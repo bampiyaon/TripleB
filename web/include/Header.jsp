@@ -40,44 +40,30 @@
             &nbsp;&nbsp;&nbsp;
             <c:choose>
                 <c:when test="${sessionScope.customer != null}">
-                    Hello ${sessionScope.customer.firstname}
+                    Hello <a href="Logout">${sessionScope.customer.firstname},</a>
                 </c:when>
                 <c:otherwise>
-                    <button type="button" class="btn btn-primary">Hello Guest</button>
+                    <a href="Login.jsp" class="btn btn-primary">Hello Guest</a>
                 </c:otherwise>
             </c:choose>
+            <form action = "Search" class="form-inline my-2 my-lg-0">
+                <select name = "searchOption" required class="form-control">
+                    <option value = "all">All</option>
+                    <option value = "">Uncle Num Square</option>
+                    <option value = "">Jaidee Shop</option>
+                    <option value = "">Mana Shop</option>
+                    <option value = "">Islamic Food Shop</option>
+                    <option value = "">KFC Shop no.1</option>
+                    <option value = "">KFC Shop no.2</option>
+                    <option value = "">KFC Shop no.3</option>
+                    <option value = "">KFC Shop no.4</option>
+                    <option value = "">KFC Shop no.5</option>
+                    <option value = "">KFC Shop no.6</option>
+                </select>
+                <input class="form-control mr-sm-2" type = "text" name = "search" placeholder="Search">
+                <input class="btn btn-secondary my-2 my-sm-0" type = "submit" value = "Search">
+            </form>
         </ul>
-
-<!--        <div class="container">
-            <div class="row">    
-                <div class="col-xs-8 col-xs-offset-2">
-                    <div class="input-group">
-                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                            <button type="button" class="btn btn-primary">Shop</button>
-                            <div class="btn-group" role="group">
-                                <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                    <a class="dropdown-item" href="#">Dropdown link</a>
-                                    <a class="dropdown-item" href="#">Dropdown link</a>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="hidden" name="search_param" value="all" id="search_param">         
-                        <input type="text" class="form-control" name="x" placeholder="Search term...">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>-->
-
-
-        <!--                <form class="form-inline my-2 my-lg-0">
-                            <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                        </form>-->
-
     </div>
 </nav>
 

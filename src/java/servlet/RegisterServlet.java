@@ -28,11 +28,13 @@ import jpa.model.controller.exceptions.RollbackFailureException;
  * @author piyao
  */
 public class RegisterServlet extends HttpServlet {
-@PersistenceUnit (unitName = "WebAppProjPU")
-EntityManagerFactory emf;
 
-@Resource
-UserTransaction utx;
+    @PersistenceUnit(unitName = "WebAppProjPU")
+    EntityManagerFactory emf;
+
+    @Resource
+    UserTransaction utx;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -43,8 +45,8 @@ UserTransaction utx;
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, RollbackFailureException, Exception {
-        
+            throws ServletException, IOException, Exception {
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String firstname = request.getParameter("firstname");
@@ -77,48 +79,8 @@ UserTransaction utx;
         request.setAttribute("message", "error");
         getServletContext().getRequestDispatcher("/Register.jsp").forward(request, response);
         
+      
     }
-//        String username = request.getParameter("username");
-//        String password = request.getParameter("password");
-//        String cusfname = request.getParameter("cusfname");
-//        String cuslname = request.getParameter("cuslname");
-//
-//        if (username != null && username.trim().length() > 0 && 
-//            password != null && password.trim().length() > 0 &&
-//            cusfname != null && cusfname.trim().length() > 0 && 
-//            cuslname != null && cuslname.trim().length() > 0 ) {
-//            
-//            String passwordEncrypt=cryptWithMD5(password);
-//            
-//            Register register = new Register();
-//            register.setUsername(username);
-//            register.setPassword(passwordEncrypt);
-//            register.setCusfname(cusfname);
-//            register.setCuslname(cuslname);
-//            
-//            RegisterJpaController regJpaCtrl = new RegisterJpaController(utx, emf);
-//            regJpaCtrl.create(register);
-//            getServletContext().getRequestDispatcher("/productList.jsp").forward(request, response);
-//        }
-//        
-//        getServletContext().getRequestDispatcher("/Register.jsp").forward(request, response);
-//    }
-//    public static String cryptWithMD5(String pass) {
-//        try {
-//            MessageDigest md = MessageDigest.getInstance("MD5");
-//            byte[] passBytes = pass.getBytes();
-//            md.reset();
-//            byte[] digested = md.digest(passBytes);
-//            StringBuffer sb = new StringBuffer();
-//            for (int i = 0; i < digested.length; i++) {
-//                sb.append(Integer.toHexString(0xff & digested[i]));
-//            }
-//            return sb.toString();
-//        } catch (NoSuchAlgorithmException ex) {
-//            System.out.println(ex);
-//        }
-//        return null;
-//    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -132,11 +94,11 @@ UserTransaction utx;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    try {
-        processRequest(request, response);
-    } catch (Exception ex) {
-        Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
-    }
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -150,11 +112,11 @@ UserTransaction utx;
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    try {
-        processRequest(request, response);
-    } catch (Exception ex) {
-        Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
-    }
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -166,5 +128,6 @@ UserTransaction utx;
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
 
 }

@@ -12,8 +12,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
         <link rel="stylesheet" href="https://bootswatch.com/4/journal/bootstrap.min.css">
+
     </head>
-    <body>
+    <body>        
         <jsp:include page="include/Header.jsp?title=Your Cart::"/>
         <table id="example" class="table">
             <thead>
