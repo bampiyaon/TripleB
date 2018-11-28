@@ -35,9 +35,10 @@ public class AuthenticationFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpSession session = ((HttpServletRequest) request).getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
-//            config.getServletContext().getRequestDispatcher("/Login").forward(request, response);
-            ((HttpServletResponse)response).sendRedirect(config.getServletContext().getContextPath() + "/Login?returnUrl=" + ((HttpServletRequest)request).getRequestURI());
+        if (session == null || session.getAttribute("customer") == null) {
+            config.getServletContext().getRequestDispatcher("/Login").forward(request, response);
+            return;
+//            ((HttpServletResponse)response).sendRedirect(config.getServletContext().getContextPath() + "/Login?returnUrl=" + ((HttpServletRequest)request).getRequestURI());
         } else {
             chain.doFilter(request, response);
         }
