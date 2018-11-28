@@ -33,6 +33,7 @@ public class LogoutServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
+            response.setHeader("cache-control", "no-cache");
         }
         getServletContext().getRequestDispatcher("/Login.jsp").forward(request, response);
 

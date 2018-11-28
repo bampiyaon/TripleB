@@ -74,6 +74,7 @@ public class RegisterServlet extends HttpServlet {
                         Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     getServletContext().getRequestDispatcher("/ProductList").forward(request, response);
+                    return;
                 }
         }
         request.setAttribute("message", "error");
