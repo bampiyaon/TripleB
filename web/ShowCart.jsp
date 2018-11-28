@@ -50,7 +50,7 @@
             <td>${cart.totalPrice}</td>
         </tr> 
     </table>
-    <form action="Login" method="post">
+    <form action="Checkout" method="post">
         <input type="submit" class="btn btn-primary" value="Check out">
     </form>
 </body>

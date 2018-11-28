@@ -67,7 +67,7 @@ public class RegisterServlet extends HttpServlet {
 
                     try {
                         actrl.create(account);
-                        actrl.edit(account);
+//                        actrl.edit(account);
                     } catch (RollbackFailureException ex) {
                         Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (Exception ex) {

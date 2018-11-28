@@ -49,18 +49,18 @@
             <form action = "Search" class="form-inline my-2 my-lg-0">
                 <select name = "searchOption" required class="form-control">
                     <option value = "all">All</option>
-                    <option value = "uncleNumSquare">Uncle Num Square</option>
-                    <option value = "jaideeShop">Jaidee Shop</option>
-                    <option value = "manaShop">Mana Shop</option>
-                    <option value = "islamicFoodShop">Islamic Food Shop</option>
-                    <option value = "KFCShopNo1">KFC Shop no.1</option>
-                    <option value = "KFCShopNo2">KFC Shop no.2</option>
-                    <option value = "KFCShopNo3">KFC Shop no.3</option>
-                    <option value = "KFCShopNo4">KFC Shop no.4</option>
-                    <option value = "KFCShopNo5">KFC Shop no.5</option>
-                    <option value = "KFCShopNo6">KFC Shop no.6</option>
+                    <option value = "101">Uncle Num Square</option>
+                    <option value = "102">Jaidee Shop</option>
+                    <option value = "103">Mana Shop</option>
+                    <option value = "104">Islamic Food Shop</option>
+                    <option value = "105">KFC Shop no.1</option>
+                    <option value = "106">KFC Shop no.2</option>
+                    <option value = "107">KFC Shop no.3</option>
+                    <option value = "108">KFC Shop no.4</option>
+                    <option value = "109">KFC Shop no.5</option>
+                    <option value = "110">KFC Shop no.6</option>
                 </select>
-                <input class="form-control mr-sm-2" type = "text" name = "search" placeholder="Search">
+                <input class="form-control mr-sm-2" type = "text" name = "keyword" placeholder="Search">
                 <input class="btn btn-secondary my-2 my-sm-0" type = "submit" value = "Search">
             </form>
         </ul>

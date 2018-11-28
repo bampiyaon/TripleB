@@ -16,6 +16,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import jpa.model.Account;
+import jpa.model.Account_;
 
 /**
  *
@@ -39,6 +41,14 @@ public class LoggerFilter implements Filter {
         String url = ((HttpServletRequest)request).getRequestURI();
         String msg = String.format("%s duration:%d millisecond(s) \n", url, duration);
         filterConfig.getServletContext().log(msg);
+
+//        Account account = (Account) ((HttpServletRequest)request).getSession(false).getAttribute("customer");
+//        if (account != null) {
+//            chain.doFilter(request, response);
+//        } else {
+//            filterConfig.getServletContext().getRequestDispatcher("/Login").forward(request, response);
+//        }
+     
     }
 
     @Override

@@ -20,6 +20,7 @@
             <thead>
             <th scope="col">Image</th>
             <th scope="col">No.</th>
+            <th scope="col">Shop</th>
             <th scope="col">Product Name</th>
             <th scope="col">Price(baht)</th>
             <th scope="col">Calories</th>
@@ -30,6 +31,7 @@
             <tr class="table-info">
                 <td><img src="picture/${p.productid}.jpg" width="120"></td>
                 <td>${vs.count}</td>
+                <td>${p.shopid.shopname}</td>
                 <td>${p.productname}</td>
                 <td>${p.price}</td>                
                 <td>${p.description}</td>

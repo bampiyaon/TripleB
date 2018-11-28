@@ -25,11 +25,13 @@ import jpa.model.controller.ProductJpaController;
  * @author piyao
  */
 public class SearchServlet extends HttpServlet {
-@PersistenceUnit (unitName = "WebAppProjPU")
-EntityManagerFactory emf;
 
-@Resource
-UserTransaction utx;
+    @PersistenceUnit(unitName = "WebAppProjPU")
+    EntityManagerFactory emf;
+
+    @Resource
+    UserTransaction utx;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -43,39 +45,62 @@ UserTransaction utx;
             throws ServletException, IOException {
         String keyword = request.getParameter("keyword");
         String searchOption = request.getParameter("searchOption");
-        
-        if (keyword != null && keyword.trim().length() > 0 && searchOption != null && searchOption.trim().length() > 0) {
-            
-            keyword = keyword.trim().toLowerCase();
-            searchOption = searchOption.trim().toLowerCase();
-            
-            ProductJpaController productJpaCtrl = new ProductJpaController(utx, emf);
-            List<Product> productList = productJpaCtrl.findProductEntities();
-            List<Product> products = new ArrayList<>();
-            
-            if (productList != null) {
-                for (Product product : products) {
-                    if (product.getProductid().toLowerCase().contains(keyword)
-                            || product.getProductname().toLowerCase().contains(keyword)) {
-                        products.add(product);
-                    }
-                    
-                }
-            }
+
+        ProductJpaController productJpaCtrl = new ProductJpaController(utx, emf);
+        List<Product> productList = productJpaCtrl.findProductEntities();
+        List<Product> products = null;
+
+       if(searchOption != null && searchOption.trim().length() > 0){
+            products = new ArrayList<>();
             
             if (!searchOption.equalsIgnoreCase("all")) {
-                if (products != null) {
-                    for (Product product : products) {
-                        if (!product.getProductname().equalsIgnoreCase(searchOption)) {
-                            products.remove(product);
+                if(productList != null){
+                    for (Product product : productList) {
+                        if(product.getShopid().getShopid().equals(searchOption)){
+                        products.add(product);
                         }
                     }
                 }
             }
+            else{
+                products = productList;
+            }
+       } 
+        
+        if (keyword != null && keyword.trim().length() > 0) {
+            keyword = keyword.trim().toLowerCase();
+            
+            if(products != null){
+                for (int i = 0; i < products.size(); i++) {
+                    if(!products.get(i).getProductname().contains(keyword)){
+                       products.remove(products.get(i));
+                       i--;
+                    }
+                    
+                }
+            }
+
+        }
+
+//        if (products == null) {
+//            products = productList;
+//        }
+//
+//        if (searchOption != null && searchOption.trim().length() > 0) {
+//            searchOption = searchOption.trim().toLowerCase();
+//
+//            if (!searchOption.equalsIgnoreCase("all")) {
+//                if (products != null) {
+//                    for (Product product : productList) {
+//                        if (!product.getProductid().equalsIgnoreCase(searchOption)) {
+//                            products.remove(product);
+//                        }
+//                    }
+//                }
+//            }
             request.setAttribute("products", products);
             getServletContext().getRequestDispatcher("/ProductList.jsp").forward(request, response);
-        }
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

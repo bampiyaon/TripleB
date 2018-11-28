@@ -7,10 +7,24 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Resource;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.transaction.UserTransaction;
+import jpa.model.Account;
+import jpa.model.Orders;
+import jpa.model.Payment;
+import jpa.model.controller.OrdersJpaController;
+import jpa.model.controller.PaymentJpaController;
+import jpa.model.controller.exceptions.RollbackFailureException;
 
 /**
  *
@@ -18,6 +32,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ShippingServlet extends HttpServlet {
 
+    @PersistenceUnit(unitName = "WebAppProjPU")
+    EntityManagerFactory emf;
+
+    @Resource
+    UserTransaction utx;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -28,7 +47,28 @@ public class ShippingServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, RollbackFailureException, Exception {
+        HttpSession session = request.getSession(false);
+//        Orders order = (Orders) session.getAttribute("orders");
+        Account account = (Account) session.getAttribute("user");
+        
+        Orders order = new Orders();
+        order.setOrderid(Integer.SIZE);
+        order.setShipdate(new Date());
+//        order.setShipto(shipto);
+        order.setOrderstatus("Shipping");
+        
+        OrdersJpaController ordersJpaCtrl = new OrdersJpaController(utx, emf);
+        ordersJpaCtrl.create(order);
+        
+        PaymentJpaController paymentJpaCtrl = new PaymentJpaController(utx, emf);
+        Payment myPayment = paymentJpaCtrl.findPayment(order.getPayment().getPaymentid());
+        
+        int totalPrice = myPayment.getTotalprice();
+        myPayment.setTotalprice(totalPrice);
+        paymentJpaCtrl.edit(myPayment);
+        
+        getServletContext().getRequestDispatcher("/CompleteMyOrder.jsp").forward(request, response);
         
     }
 
@@ -44,7 +84,11 @@ public class ShippingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(ShippingServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -58,7 +102,11 @@ public class ShippingServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(ShippingServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

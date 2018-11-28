@@ -15,6 +15,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.UserTransaction;
 import jpa.model.Product;
+import jpa.model.Shop;
 import jpa.model.controller.exceptions.NonexistentEntityException;
 import jpa.model.controller.exceptions.PreexistingEntityException;
 import jpa.model.controller.exceptions.RollbackFailureException;
@@ -41,7 +42,16 @@ public class ProductJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
+            Shop shopid = product.getShopid();
+            if (shopid != null) {
+                shopid = em.getReference(shopid.getClass(), shopid.getShopid());
+                product.setShopid(shopid);
+            }
             em.persist(product);
+            if (shopid != null) {
+                shopid.getProductList().add(product);
+                shopid = em.merge(shopid);
+            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -65,7 +75,22 @@ public class ProductJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
+            Product persistentProduct = em.find(Product.class, product.getProductid());
+            Shop shopidOld = persistentProduct.getShopid();
+            Shop shopidNew = product.getShopid();
+            if (shopidNew != null) {
+                shopidNew = em.getReference(shopidNew.getClass(), shopidNew.getShopid());
+                product.setShopid(shopidNew);
+            }
             product = em.merge(product);
+            if (shopidOld != null && !shopidOld.equals(shopidNew)) {
+                shopidOld.getProductList().remove(product);
+                shopidOld = em.merge(shopidOld);
+            }
+            if (shopidNew != null && !shopidNew.equals(shopidOld)) {
+                shopidNew.getProductList().add(product);
+                shopidNew = em.merge(shopidNew);
+            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -99,6 +124,11 @@ public class ProductJpaController implements Serializable {
                 product.getProductid();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The product with id " + id + " no longer exists.", enfe);
+            }
+            Shop shopid = product.getShopid();
+            if (shopid != null) {
+                shopid.getProductList().remove(product);
+                shopid = em.merge(shopid);
             }
             em.remove(product);
             utx.commit();
