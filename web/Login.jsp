@@ -16,9 +16,9 @@
 
         <jsp:include page="include/Header.jsp?title=Login"/> 
         <div class="container">
-            <table class="table">
-                <form action="Login" method="post">
-                    <!--<div class="btn-group-vertical" data-toggle="buttons">-->
+            <form action="Login" method="post">
+                <input type="hidden" name="returnUrl" value="${returnUrl}">
+                <table class="table">
 
                     <tr>
                         <td>Username :</td>
@@ -37,11 +37,10 @@
                         <td colspan="2"><p style="color: red">${loginfailed}</p></td>
                         <td><input type="submit" class="btn btn-link" value="Register"></td>
                     </tr>
-                </form>  
-                <form action="Register" method="post"> 
-                </form>  
-            </table>   
+                </table>
+            </form>     
         </div>
-
     </body>
 </html>
+
+

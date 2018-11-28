@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
 import jpa.model.Product;
 import jpa.model.controller.ProductJpaController;
@@ -42,9 +43,10 @@ public class ProductListServet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession(true);
         ProductJpaController productJpaCtrl = new ProductJpaController(utx, emf);
         List<Product> products = productJpaCtrl.findProductEntities();
-        request.setAttribute("products", products);
+        session.setAttribute("products", products);
         getServletContext().getRequestDispatcher("/ProductList.jsp").forward(request, response);
     }
 

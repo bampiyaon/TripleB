@@ -20,17 +20,18 @@ import jpa.model.Product;
 import jpa.model.controller.ProductJpaController;
 import model.ShoppingCart;
 
-
 /**
  *
  * @author piyao
  */
 public class AddItemToCartServlet extends HttpServlet {
-@PersistenceUnit (unitName = "WebAppProjPU")
-EntityManagerFactory emf;
 
-@Resource
-UserTransaction utx;
+    @PersistenceUnit(unitName = "WebAppProjPU")
+    EntityManagerFactory emf;
+
+    @Resource
+    UserTransaction utx;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -42,18 +43,21 @@ UserTransaction utx;
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession(true);
-        String productId = request.getParameter("productId");
         ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
         if (cart == null) {
             cart = new ShoppingCart();
             session.setAttribute("cart", cart);
         }
+        String productid = request.getParameter("productid");
         ProductJpaController productJpaCtrl = new ProductJpaController(utx, emf);
-        Product p = productJpaCtrl.findProduct(productId);
+        Product p = productJpaCtrl.findProduct(productid);
         cart.add(p);
-       response.sendRedirect("ProductList");
+
+        session.setAttribute("cart", cart);
+        response.sendRedirect("ProductList.jsp");
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

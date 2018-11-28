@@ -37,21 +37,23 @@
                 <td>${vs.count}</td>
                 <td>${line.product.productid}</td>
                 <td>${line.product.productname}</td>
-                <td>${line.quantity}</td>
+                <td><a href = "AddItemToCart2?productid=${line.product.productid}"><input type="submit" value="+" ></a>
+                        ${line.quantity}
+                    <a href = "RemoveToCart?productid=${line.product.productid}"><input type="submit" value="-" ></a> 
+                </td>
                 <td>${line.product.price}</td>
                 <td>${line.totalPrice}</td>
             </tr>
         </c:forEach>
         <tr>
             <td colspan="4"></td>
-
             <td>${cart.totalQuantity}</td>
             <td></td>
             <td>${cart.totalPrice}</td>
         </tr> 
     </table>
     <form action="Checkout" method="post">
-        <input type="submit" class="btn btn-primary" value="Check out">
+        <input type="submit" class="btn btn-primary" value="Check out"/>
     </form>
 </body>
 </html>

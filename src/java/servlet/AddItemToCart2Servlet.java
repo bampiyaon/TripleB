@@ -7,18 +7,30 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.annotation.Resource;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.transaction.UserTransaction;
+import jpa.model.Product;
+import jpa.model.controller.ProductJpaController;
+import model.ShoppingCart;
 
 /**
  *
  * @author piyao
  */
-public class LogoutServlet extends HttpServlet {
+public class AddItemToCart2Servlet extends HttpServlet {
+    
+    @PersistenceUnit(unitName = "WebAppProjPU")
+    EntityManagerFactory emf;
 
+    @Resource
+    UserTransaction utx;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -30,11 +42,19 @@ public class LogoutServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
+         HttpSession session = request.getSession(true);
+        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ShoppingCart();
+            session.setAttribute("cart", cart);
         }
-        getServletContext().getRequestDispatcher("/Login.jsp").forward(request, response);
+        String productid = request.getParameter("productid");
+        ProductJpaController productJpaCtrl = new ProductJpaController(utx, emf);
+        Product p = productJpaCtrl.findProduct(productid);
+        cart.add(p);
+
+        session.setAttribute("cart", cart);
+        response.sendRedirect("ShowCart.jsp");
 
     }
 

@@ -49,11 +49,13 @@ public class RemoveToCartServlet extends HttpServlet {
             cart = new ShoppingCart();
             session.setAttribute("cart", cart);
         }
-        String productId = request.getParameter("productId");
+        String productId = request.getParameter("productid");
         ProductJpaController productJpaCtrl = new ProductJpaController(utx, emf);
         Product p = productJpaCtrl.findProduct(productId);
+        
         cart.remove(p);
-        response.sendRedirect("ProductList");
+        session.setAttribute("cart", cart);
+        response.sendRedirect("ShowCart.jsp");
 
     }
 

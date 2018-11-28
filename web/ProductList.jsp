@@ -37,7 +37,7 @@
                 <td>${p.description}</td>
                 <td>
                     <form action="AddItemToCart" method = "post">
-                        <input type = "hidden" name = "productId" value="${p.productid}">
+                        <input type = "hidden" name = "productid" value="${p.productid}">
                         <input type = "image" src="basket.png" width="25" alt = "Add">
                     </form>
 <!--                        <a href = "Additem?productCode=${p.productid}">

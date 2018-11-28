@@ -30,9 +30,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="Register">Signup</a>
             </li>
-            <li class="nav-item">
+<!--            <li class="nav-item">
                 <a class="nav-link" href="Login">Login</a>
-            </li>
+            </li>-->
             &nbsp;&nbsp;&nbsp;
             <c:if test="${cart != null}">
                 <a class="navbar-brand" href="ShowCart" title="Cart"><img src="basket.png" width="25">${cart.totalQuantity}</a>
@@ -43,7 +43,7 @@
                     Hello <a href="Logout">${sessionScope.customer.firstname},</a>
                 </c:when>
                 <c:otherwise>
-                    <a href="Login">Hello Guest</a>
+                    <a href="Login?returnUrl=${requestScope['javax.servlet.forward.request_uri']}?${requestScope['javax.servlet.forward.query_string']}">Hello Guest</a>
                 </c:otherwise>
             </c:choose>
             <form action = "Search" class="form-inline my-2 my-lg-0">
