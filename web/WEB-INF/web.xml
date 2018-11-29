@@ -43,10 +43,6 @@
         <servlet-class>servlet.RemoveToCartServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>OrderHistoryServlet</servlet-name>
-        <servlet-class>servlet.OrderHistory</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>PaymentServlet</servlet-name>
         <servlet-class>servlet.PaymentServlet</servlet-class>
     </servlet>
@@ -57,10 +53,6 @@
     <servlet>
         <servlet-name>SearchServlet</servlet-name>
         <servlet-class>servlet.SearchServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ShippingServlet</servlet-name>
-        <servlet-class>servlet.ShippingServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CheckoutServlet</servlet-name>
@@ -99,10 +91,6 @@
         <url-pattern>/RemoveToCart</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>OrderHistoryServlet</servlet-name>
-        <url-pattern>/OrderHistory</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>PaymentServlet</servlet-name>
         <url-pattern>/Payment</url-pattern>
     </servlet-mapping>
@@ -113,10 +101,6 @@
     <servlet-mapping>
         <servlet-name>SearchServlet</servlet-name>
         <url-pattern>/Search</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ShippingServlet</servlet-name>
-        <url-pattern>/Shipping</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CheckoutServlet</servlet-name>
@@ -135,4 +119,16 @@
             30
         </session-timeout>
     </session-config>
+    <servlet>
+        <servlet-name>AddItemToCart2Servlet</servlet-name>
+        <servlet-class>servlet.AddItemToCart2Servlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddItemToCart2Servlet</servlet-name>
+        <servlet-class>servlet.AddItemToCart2Servlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddItemToCart2Servlet</servlet-name>
+        <servlet-class>servlet.AddItemToCart2Servlet</servlet-class>
+    </servlet>
 </web-app>

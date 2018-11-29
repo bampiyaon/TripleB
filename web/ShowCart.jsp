@@ -16,6 +16,11 @@
     </head>
     <body>        
         <jsp:include page="include/Header.jsp?title=Your Cart::"/>
+        <div class="container">
+        <h4>Processing</h4>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 33%"></div>
+        </div>
         <table id="example" class="table">
             <thead>
             <th>Image</th>
@@ -56,4 +61,5 @@
         <input type="submit" class="btn btn-primary" value="Check out"/>
     </form>
 </body>
+</div>
 </html>

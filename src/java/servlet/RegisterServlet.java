@@ -53,7 +53,7 @@ public class RegisterServlet extends HttpServlet {
         String lastname = request.getParameter("lastname");
         
         
-        if (username != null && password != null && firstname != null && lastname != null) {
+        if (username != null && password != null) {
                 if (username.trim().length() > 0 && password.trim().length() > 0 && firstname.trim().length() > 0
                         && lastname.trim().length() > 0) {
                     AccountJpaController actrl = new AccountJpaController(utx, emf);

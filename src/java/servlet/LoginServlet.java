@@ -58,16 +58,6 @@ public class LoginServlet extends HttpServlet {
 
             if (customer != null && password.equals(customer.getPassword())) {
                 request.getSession().setAttribute("customer", customer);
-                
-//                if (returnUrl != null) {
-//                    response.sendRedirect(returnUrl);
-//                    return;
-//                }
-//                else {
-//                    response.sendRedirect(returnUrl);
-//                    return;
-//                }
-    
                 getServletContext().getRequestDispatcher("/ProductList").forward(request, response);
                 return;
             }

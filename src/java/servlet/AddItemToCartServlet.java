@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,6 +50,13 @@ public class AddItemToCartServlet extends HttpServlet {
         if (cart == null) {
             cart = new ShoppingCart();
             session.setAttribute("cart", cart);
+            
+            //เพื่อเก็บรายการสินค้าในตะกร้าจนกว่า user จะทำการ logout
+            Cookie[] cookies = request.getCookies();
+            for (Cookie ck : cookies) {
+                ck.setMaxAge(60*60);
+                response.addCookie(ck);
+            }
         }
         String productid = request.getParameter("productid");
         ProductJpaController productJpaCtrl = new ProductJpaController(utx, emf);
