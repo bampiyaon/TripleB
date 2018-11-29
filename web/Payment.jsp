@@ -16,17 +16,10 @@
         <jsp:include page="include/Header.jsp?title=Our Products"/>
         <div class="container">
             <form action="Register" method="post">
-                <fieldset>
-                    <div class="form-group">
-                        <label for="first">Your location in KMUTT</label>
-                        <input type="text" class="form-control" id="InputStudentId" aria-describedby="emailHelp" placeholder="ex. CB2301"  name="" required> 
-                        <small id="emailHelp" class="form-text text-muted">Please Enter in English</small>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                    <div colspan="2"><p style="color: red">${message}</p></div>
-                </fieldset>
+                <div class="alert alert-dismissible alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Successfully</strong> Thank you for your order.
+                </div>
             </form> 
         </div>
     </body>

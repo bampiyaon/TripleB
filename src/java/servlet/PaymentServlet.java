@@ -64,7 +64,7 @@ public class PaymentServlet extends HttpServlet {
             getServletContext().getRequestDispatcher("/Shipping").forward(request, response);
             return;
         }
-        getServletContext().getRequestDispatcher("/payment.jsp").forward(request, response);
+        getServletContext().getRequestDispatcher("/Payment.jsp").forward(request, response);
         
     }
 

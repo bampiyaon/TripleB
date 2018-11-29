@@ -29,7 +29,7 @@ public class CheckoutServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        getServletContext().getRequestDispatcher("/CheckOrder.jsp").forward(request, response);
         
     }
 
