@@ -20,59 +20,59 @@
     </filter-mapping>
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>servlet.LoginServlet</servlet-class>
+        <servlet-class>servlet.account.LoginServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>servlet.LogoutServlet</servlet-class>
+        <servlet-class>servlet.account.LogoutServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AddItemToCartServlet</servlet-name>
-        <servlet-class>servlet.AddItemToCartServlet</servlet-class>
+        <servlet-class>servlet.cart.AddItemToCartServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ProductListServet</servlet-name>
-        <servlet-class>servlet.ProductListServet</servlet-class>
+        <servlet-class>servlet.product.ProductListServet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
-        <servlet-class>servlet.RegisterServlet</servlet-class>
+        <servlet-class>servlet.account.RegisterServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>RemoveToCartServlet</servlet-name>
-        <servlet-class>servlet.RemoveToCartServlet</servlet-class>
+        <servlet-name>RemoveFromCartServlet</servlet-name>
+        <servlet-class>servlet.cart.RemoveFromCartServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>OrderHistoryServlet</servlet-name>
-        <servlet-class>servlet.OrderHistory</servlet-class>
+        <servlet-class>servlet.account.OrderHistory</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>PaymentServlet</servlet-name>
-        <servlet-class>servlet.PaymentServlet</servlet-class>
+        <servlet-class>servlet.payment.PaymentServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ShowCartServlet</servlet-name>
-        <servlet-class>servlet.ShowCartServlet</servlet-class>
+        <servlet-class>servlet.cart.ShowCartServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SearchServlet</servlet-name>
-        <servlet-class>servlet.SearchServlet</servlet-class>
+        <servlet-class>servlet.product.SearchServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ShippingServlet</servlet-name>
-        <servlet-class>servlet.ShippingServlet</servlet-class>
+        <servlet-name>AddAddressServlet</servlet-name>
+        <servlet-class>servlet.account.AddAddressServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CheckoutServlet</servlet-name>
-        <servlet-class>servlet.CheckoutServlet</servlet-class>
+        <servlet-class>servlet.cart.CheckoutServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>UpdateCartServlet</servlet-name>
-        <servlet-class>servlet.UpdateCartServlet</servlet-class>
+        <servlet-name>ProductDetailServlet</servlet-name>
+        <servlet-class>servlet.product.ProductDetailServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>AddItemToCart2Servlet</servlet-name>
-        <servlet-class>servlet.AddItemToCart2Servlet</servlet-class>
+        <servlet-name>AddUpServlet</servlet-name>
+        <servlet-class>servlet.cart.AddUpServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -95,10 +95,6 @@
         <url-pattern>/Register</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>RemoveToCartServlet</servlet-name>
-        <url-pattern>/RemoveToCart</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>OrderHistoryServlet</servlet-name>
         <url-pattern>/OrderHistory</url-pattern>
     </servlet-mapping>
@@ -115,20 +111,24 @@
         <url-pattern>/Search</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ShippingServlet</servlet-name>
-        <url-pattern>/Shipping</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>CheckoutServlet</servlet-name>
         <url-pattern>/Checkout</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>UpdateCartServlet</servlet-name>
-        <url-pattern>/UpdateCart</url-pattern>
+        <servlet-name>ProductDetailServlet</servlet-name>
+        <url-pattern>/ProductDetail</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>AddItemToCart2Servlet</servlet-name>
-        <url-pattern>/AddItemToCart2</url-pattern>
+        <servlet-name>AddUpServlet</servlet-name>
+        <url-pattern>/AddUp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveFromCartServlet</servlet-name>
+        <url-pattern>/RemoveFromCart</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddAddressServlet</servlet-name>
+        <url-pattern>/AddAddress</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

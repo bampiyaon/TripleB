@@ -50,24 +50,27 @@ public class Account implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 11)
     @Column(name = "USERNAME")
-    private Integer username;
+    private String username;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 15)
     @Column(name = "PASSWORD")
     private String password;
+    @OneToMany(mappedBy = "username")
+    private List<Address> addressList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "username")
     private List<Orders> ordersList;
 
     public Account() {
     }
 
-    public Account(Integer username) {
+    public Account(String username) {
         this.username = username;
     }
 
-    public Account(Integer username, String firstname, String lastname, String password) {
+    public Account(String username, String firstname, String lastname, String password) {
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -90,11 +93,11 @@ public class Account implements Serializable {
         this.lastname = lastname;
     }
 
-    public Integer getUsername() {
+    public String getUsername() {
         return username;
     }
 
-    public void setUsername(Integer username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
@@ -104,6 +107,15 @@ public class Account implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @XmlTransient
+    public List<Address> getAddressList() {
+        return addressList;
+    }
+
+    public void setAddressList(List<Address> addressList) {
+        this.addressList = addressList;
     }
 
     @XmlTransient

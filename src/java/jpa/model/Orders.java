@@ -7,6 +7,7 @@ package jpa.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -23,6 +25,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -35,9 +38,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Orders.findAll", query = "SELECT o FROM Orders o")
     , @NamedQuery(name = "Orders.findByOrderid", query = "SELECT o FROM Orders o WHERE o.orderid = :orderid")
     , @NamedQuery(name = "Orders.findByOrderdate", query = "SELECT o FROM Orders o WHERE o.orderdate = :orderdate")
-    , @NamedQuery(name = "Orders.findByOrderstatus", query = "SELECT o FROM Orders o WHERE o.orderstatus = :orderstatus")
-    , @NamedQuery(name = "Orders.findByShipdate", query = "SELECT o FROM Orders o WHERE o.shipdate = :shipdate")
-    , @NamedQuery(name = "Orders.findByShipto", query = "SELECT o FROM Orders o WHERE o.shipto = :shipto")})
+    , @NamedQuery(name = "Orders.findByOrderstatus", query = "SELECT o FROM Orders o WHERE o.orderstatus = :orderstatus")})
 public class Orders implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,17 +53,15 @@ public class Orders implements Serializable {
     @Size(max = 10)
     @Column(name = "ORDERSTATUS")
     private String orderstatus;
-    @Column(name = "SHIPDATE")
-    @Temporal(TemporalType.DATE)
-    private Date shipdate;
-    @Size(max = 30)
-    @Column(name = "SHIPTO")
-    private String shipto;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "orderid")
     private Payment payment;
     @JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME")
     @ManyToOne(optional = false)
     private Account username;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
+    private List<Lineitem> lineitemList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderid")
+    private List<Shipping> shippingList;
 
     public Orders() {
     }
@@ -95,22 +94,6 @@ public class Orders implements Serializable {
         this.orderstatus = orderstatus;
     }
 
-    public Date getShipdate() {
-        return shipdate;
-    }
-
-    public void setShipdate(Date shipdate) {
-        this.shipdate = shipdate;
-    }
-
-    public String getShipto() {
-        return shipto;
-    }
-
-    public void setShipto(String shipto) {
-        this.shipto = shipto;
-    }
-
     public Payment getPayment() {
         return payment;
     }
@@ -125,6 +108,24 @@ public class Orders implements Serializable {
 
     public void setUsername(Account username) {
         this.username = username;
+    }
+
+    @XmlTransient
+    public List<Lineitem> getLineitemList() {
+        return lineitemList;
+    }
+
+    public void setLineitemList(List<Lineitem> lineitemList) {
+        this.lineitemList = lineitemList;
+    }
+
+    @XmlTransient
+    public List<Shipping> getShippingList() {
+        return shippingList;
+    }
+
+    public void setShippingList(List<Shipping> shippingList) {
+        this.shippingList = shippingList;
     }
 
     @Override

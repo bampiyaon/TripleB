@@ -6,7 +6,9 @@
 package jpa.model;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,10 +16,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -49,13 +53,15 @@ public class Product implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "PRICE")
-    private int price;
+    private double price;
     @Size(max = 100)
     @Column(name = "DESCRIPTION")
     private String description;
     @JoinColumn(name = "SHOPID", referencedColumnName = "SHOPID")
     @ManyToOne(optional = false)
     private Shop shopid;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    private List<Lineitem> lineitemList;
 
     public Product() {
     }
@@ -64,7 +70,7 @@ public class Product implements Serializable {
         this.productid = productid;
     }
 
-    public Product(String productid, String productname, int price) {
+    public Product(String productid, String productname, double price) {
         this.productid = productid;
         this.productname = productname;
         this.price = price;
@@ -90,7 +96,7 @@ public class Product implements Serializable {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -108,6 +114,15 @@ public class Product implements Serializable {
 
     public void setShopid(Shop shopid) {
         this.shopid = shopid;
+    }
+
+    @XmlTransient
+    public List<Lineitem> getLineitemList() {
+        return lineitemList;
+    }
+
+    public void setLineitemList(List<Lineitem> lineitemList) {
+        this.lineitemList = lineitemList;
     }
 
     @Override

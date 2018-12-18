@@ -17,7 +17,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import jpa.model.Account;
-import jpa.model.Account_;
 
 /**
  *

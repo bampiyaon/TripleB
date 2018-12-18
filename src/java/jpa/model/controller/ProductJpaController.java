@@ -6,16 +6,19 @@
 package jpa.model.controller;
 
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import jpa.model.Shop;
+import jpa.model.Lineitem;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.transaction.UserTransaction;
 import jpa.model.Product;
-import jpa.model.Shop;
+import jpa.model.controller.exceptions.IllegalOrphanException;
 import jpa.model.controller.exceptions.NonexistentEntityException;
 import jpa.model.controller.exceptions.PreexistingEntityException;
 import jpa.model.controller.exceptions.RollbackFailureException;
@@ -38,6 +41,9 @@ public class ProductJpaController implements Serializable {
     }
 
     public void create(Product product) throws PreexistingEntityException, RollbackFailureException, Exception {
+        if (product.getLineitemList() == null) {
+            product.setLineitemList(new ArrayList<Lineitem>());
+        }
         EntityManager em = null;
         try {
             utx.begin();
@@ -47,10 +53,25 @@ public class ProductJpaController implements Serializable {
                 shopid = em.getReference(shopid.getClass(), shopid.getShopid());
                 product.setShopid(shopid);
             }
+            List<Lineitem> attachedLineitemList = new ArrayList<Lineitem>();
+            for (Lineitem lineitemListLineitemToAttach : product.getLineitemList()) {
+                lineitemListLineitemToAttach = em.getReference(lineitemListLineitemToAttach.getClass(), lineitemListLineitemToAttach.getLineitemPK());
+                attachedLineitemList.add(lineitemListLineitemToAttach);
+            }
+            product.setLineitemList(attachedLineitemList);
             em.persist(product);
             if (shopid != null) {
                 shopid.getProductList().add(product);
                 shopid = em.merge(shopid);
+            }
+            for (Lineitem lineitemListLineitem : product.getLineitemList()) {
+                Product oldProductOfLineitemListLineitem = lineitemListLineitem.getProduct();
+                lineitemListLineitem.setProduct(product);
+                lineitemListLineitem = em.merge(lineitemListLineitem);
+                if (oldProductOfLineitemListLineitem != null) {
+                    oldProductOfLineitemListLineitem.getLineitemList().remove(lineitemListLineitem);
+                    oldProductOfLineitemListLineitem = em.merge(oldProductOfLineitemListLineitem);
+                }
             }
             utx.commit();
         } catch (Exception ex) {
@@ -70,7 +91,7 @@ public class ProductJpaController implements Serializable {
         }
     }
 
-    public void edit(Product product) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void edit(Product product) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
@@ -78,10 +99,31 @@ public class ProductJpaController implements Serializable {
             Product persistentProduct = em.find(Product.class, product.getProductid());
             Shop shopidOld = persistentProduct.getShopid();
             Shop shopidNew = product.getShopid();
+            List<Lineitem> lineitemListOld = persistentProduct.getLineitemList();
+            List<Lineitem> lineitemListNew = product.getLineitemList();
+            List<String> illegalOrphanMessages = null;
+            for (Lineitem lineitemListOldLineitem : lineitemListOld) {
+                if (!lineitemListNew.contains(lineitemListOldLineitem)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Lineitem " + lineitemListOldLineitem + " since its product field is not nullable.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
             if (shopidNew != null) {
                 shopidNew = em.getReference(shopidNew.getClass(), shopidNew.getShopid());
                 product.setShopid(shopidNew);
             }
+            List<Lineitem> attachedLineitemListNew = new ArrayList<Lineitem>();
+            for (Lineitem lineitemListNewLineitemToAttach : lineitemListNew) {
+                lineitemListNewLineitemToAttach = em.getReference(lineitemListNewLineitemToAttach.getClass(), lineitemListNewLineitemToAttach.getLineitemPK());
+                attachedLineitemListNew.add(lineitemListNewLineitemToAttach);
+            }
+            lineitemListNew = attachedLineitemListNew;
+            product.setLineitemList(lineitemListNew);
             product = em.merge(product);
             if (shopidOld != null && !shopidOld.equals(shopidNew)) {
                 shopidOld.getProductList().remove(product);
@@ -90,6 +132,17 @@ public class ProductJpaController implements Serializable {
             if (shopidNew != null && !shopidNew.equals(shopidOld)) {
                 shopidNew.getProductList().add(product);
                 shopidNew = em.merge(shopidNew);
+            }
+            for (Lineitem lineitemListNewLineitem : lineitemListNew) {
+                if (!lineitemListOld.contains(lineitemListNewLineitem)) {
+                    Product oldProductOfLineitemListNewLineitem = lineitemListNewLineitem.getProduct();
+                    lineitemListNewLineitem.setProduct(product);
+                    lineitemListNewLineitem = em.merge(lineitemListNewLineitem);
+                    if (oldProductOfLineitemListNewLineitem != null && !oldProductOfLineitemListNewLineitem.equals(product)) {
+                        oldProductOfLineitemListNewLineitem.getLineitemList().remove(lineitemListNewLineitem);
+                        oldProductOfLineitemListNewLineitem = em.merge(oldProductOfLineitemListNewLineitem);
+                    }
+                }
             }
             utx.commit();
         } catch (Exception ex) {
@@ -113,7 +166,7 @@ public class ProductJpaController implements Serializable {
         }
     }
 
-    public void destroy(String id) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
@@ -124,6 +177,17 @@ public class ProductJpaController implements Serializable {
                 product.getProductid();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The product with id " + id + " no longer exists.", enfe);
+            }
+            List<String> illegalOrphanMessages = null;
+            List<Lineitem> lineitemListOrphanCheck = product.getLineitemList();
+            for (Lineitem lineitemListOrphanCheckLineitem : lineitemListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Product (" + product + ") cannot be destroyed since the Lineitem " + lineitemListOrphanCheckLineitem + " in its lineitemList field has a non-nullable product field.");
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
             }
             Shop shopid = product.getShopid();
             if (shopid != null) {

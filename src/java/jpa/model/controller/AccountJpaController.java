@@ -10,13 +10,14 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import jpa.model.Orders;
+import jpa.model.Address;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.transaction.UserTransaction;
 import jpa.model.Account;
+import jpa.model.Orders;
 import jpa.model.controller.exceptions.IllegalOrphanException;
 import jpa.model.controller.exceptions.NonexistentEntityException;
 import jpa.model.controller.exceptions.PreexistingEntityException;
@@ -40,6 +41,9 @@ public class AccountJpaController implements Serializable {
     }
 
     public void create(Account account) throws PreexistingEntityException, RollbackFailureException, Exception {
+        if (account.getAddressList() == null) {
+            account.setAddressList(new ArrayList<Address>());
+        }
         if (account.getOrdersList() == null) {
             account.setOrdersList(new ArrayList<Orders>());
         }
@@ -47,6 +51,12 @@ public class AccountJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
+            List<Address> attachedAddressList = new ArrayList<Address>();
+            for (Address addressListAddressToAttach : account.getAddressList()) {
+                addressListAddressToAttach = em.getReference(addressListAddressToAttach.getClass(), addressListAddressToAttach.getAddressid());
+                attachedAddressList.add(addressListAddressToAttach);
+            }
+            account.setAddressList(attachedAddressList);
             List<Orders> attachedOrdersList = new ArrayList<Orders>();
             for (Orders ordersListOrdersToAttach : account.getOrdersList()) {
                 ordersListOrdersToAttach = em.getReference(ordersListOrdersToAttach.getClass(), ordersListOrdersToAttach.getOrderid());
@@ -54,6 +64,15 @@ public class AccountJpaController implements Serializable {
             }
             account.setOrdersList(attachedOrdersList);
             em.persist(account);
+            for (Address addressListAddress : account.getAddressList()) {
+                Account oldUsernameOfAddressListAddress = addressListAddress.getUsername();
+                addressListAddress.setUsername(account);
+                addressListAddress = em.merge(addressListAddress);
+                if (oldUsernameOfAddressListAddress != null) {
+                    oldUsernameOfAddressListAddress.getAddressList().remove(addressListAddress);
+                    oldUsernameOfAddressListAddress = em.merge(oldUsernameOfAddressListAddress);
+                }
+            }
             for (Orders ordersListOrders : account.getOrdersList()) {
                 Account oldUsernameOfOrdersListOrders = ordersListOrders.getUsername();
                 ordersListOrders.setUsername(account);
@@ -87,6 +106,8 @@ public class AccountJpaController implements Serializable {
             utx.begin();
             em = getEntityManager();
             Account persistentAccount = em.find(Account.class, account.getUsername());
+            List<Address> addressListOld = persistentAccount.getAddressList();
+            List<Address> addressListNew = account.getAddressList();
             List<Orders> ordersListOld = persistentAccount.getOrdersList();
             List<Orders> ordersListNew = account.getOrdersList();
             List<String> illegalOrphanMessages = null;
@@ -101,6 +122,13 @@ public class AccountJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
+            List<Address> attachedAddressListNew = new ArrayList<Address>();
+            for (Address addressListNewAddressToAttach : addressListNew) {
+                addressListNewAddressToAttach = em.getReference(addressListNewAddressToAttach.getClass(), addressListNewAddressToAttach.getAddressid());
+                attachedAddressListNew.add(addressListNewAddressToAttach);
+            }
+            addressListNew = attachedAddressListNew;
+            account.setAddressList(addressListNew);
             List<Orders> attachedOrdersListNew = new ArrayList<Orders>();
             for (Orders ordersListNewOrdersToAttach : ordersListNew) {
                 ordersListNewOrdersToAttach = em.getReference(ordersListNewOrdersToAttach.getClass(), ordersListNewOrdersToAttach.getOrderid());
@@ -109,6 +137,23 @@ public class AccountJpaController implements Serializable {
             ordersListNew = attachedOrdersListNew;
             account.setOrdersList(ordersListNew);
             account = em.merge(account);
+            for (Address addressListOldAddress : addressListOld) {
+                if (!addressListNew.contains(addressListOldAddress)) {
+                    addressListOldAddress.setUsername(null);
+                    addressListOldAddress = em.merge(addressListOldAddress);
+                }
+            }
+            for (Address addressListNewAddress : addressListNew) {
+                if (!addressListOld.contains(addressListNewAddress)) {
+                    Account oldUsernameOfAddressListNewAddress = addressListNewAddress.getUsername();
+                    addressListNewAddress.setUsername(account);
+                    addressListNewAddress = em.merge(addressListNewAddress);
+                    if (oldUsernameOfAddressListNewAddress != null && !oldUsernameOfAddressListNewAddress.equals(account)) {
+                        oldUsernameOfAddressListNewAddress.getAddressList().remove(addressListNewAddress);
+                        oldUsernameOfAddressListNewAddress = em.merge(oldUsernameOfAddressListNewAddress);
+                    }
+                }
+            }
             for (Orders ordersListNewOrders : ordersListNew) {
                 if (!ordersListOld.contains(ordersListNewOrders)) {
                     Account oldUsernameOfOrdersListNewOrders = ordersListNewOrders.getUsername();
@@ -129,7 +174,7 @@ public class AccountJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = account.getUsername();
+                String id = account.getUsername();
                 if (findAccount(id) == null) {
                     throw new NonexistentEntityException("The account with id " + id + " no longer exists.");
                 }
@@ -142,7 +187,7 @@ public class AccountJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
@@ -164,6 +209,11 @@ public class AccountJpaController implements Serializable {
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            List<Address> addressList = account.getAddressList();
+            for (Address addressListAddress : addressList) {
+                addressListAddress.setUsername(null);
+                addressListAddress = em.merge(addressListAddress);
             }
             em.remove(account);
             utx.commit();
@@ -205,7 +255,7 @@ public class AccountJpaController implements Serializable {
         }
     }
 
-    public Account findAccount(Integer id) {
+    public Account findAccount(String id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Account.class, id);

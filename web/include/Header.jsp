@@ -4,40 +4,61 @@
     Author     : piyao
 --%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<head>
 
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="ProductList" title="Our Product"><img src="logo_big.png" width="50"></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+    <title>Agency - Start Bootstrap Theme</title>
 
-    <h2>${param.title}</h2>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <div class="collapse navbar-collapse" id="navbarColor01">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="ProductList">Product</a>
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- Custom styles for this template -->
+    <link href="css/agency.min.css" rel="stylesheet">
+
+  </head>
+
+  <body id="page-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #696969">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">TripleBB</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Menu
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            
+            
+          
+          <ul class="navbar-nav text-uppercase ml-auto">
+               <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="index.html">home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="OrderHistory">Check My Order</a>
+                <a class="nav-link js-scroll-trigger" href="Register">Sign up</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="Register">Signup</a>
+                <a class="nav-link js-scroll-trigger" href="ProductList">Product</a>
             </li>
-<!--            <li class="nav-item">
-                <a class="nav-link" href="Login">Login</a>
-            </li>-->
-            &nbsp;&nbsp;&nbsp;
-            <c:if test="${cart != null}">
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#team">Team</a>
+            </li>
+             <c:if test="${cart != null}">
                 <a class="navbar-brand" href="ShowCart" title="Cart"><img src="basket.png" width="25">${cart.totalQuantity}</a>
                 </c:if>
-            &nbsp;&nbsp;&nbsp;
+           
             <c:choose>
                 <c:when test="${sessionScope.customer != null}">
                     Hello <a href="Logout">${sessionScope.customer.firstname},</a>
@@ -46,7 +67,9 @@
                     <a href="Login?returnUrl=${requestScope['javax.servlet.forward.request_uri']}?${requestScope['javax.servlet.forward.query_string']}">Hello Guest</a>
                 </c:otherwise>
             </c:choose>
-            <form action = "Search" class="form-inline my-2 my-lg-0">
+           
+            
+             <form action = "Search" class="form-inline my-2 my-lg-0">
                 <select name = "searchOption" required class="form-control">
                     <option value = "all">All</option>
                     <option value = "101">Uncle Num Square</option>
@@ -63,7 +86,42 @@
                 <input class="form-control mr-sm-2" type = "text" name = "keyword" placeholder="Search">
                 <input class="btn btn-secondary my-2 my-sm-0" type = "submit" value = "Search">
             </form>
+            
+                            
+
+            
+          </ul>
+        </div>
+      </div>
+    </nav>
+           
+            <c:if test="${cart != null}">
+                <a class="navbar-brand" href="ShowCart" title="Cart"><img src="basket.png" width="25">${cart.totalQuantity}</a>
+                </c:if>
+           
+            <c:choose>
+                <c:when test="${sessionScope.customer != null}">
+                    Hello <a href="Logout">${sessionScope.customer.firstname},</a>
+                </c:when>
+                <c:otherwise>
+                    <a href="Login?returnUrl=${requestScope['javax.servlet.forward.request_uri']}?${requestScope['javax.servlet.forward.query_string']}">Hello Guest</a>
+                </c:otherwise>
+            </c:choose>
+          
         </ul>
+        <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Contact form JavaScript -->
+    <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/contact_me.js"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="js/agency.min.js"></script>
+
     </div>
 </nav>
 
