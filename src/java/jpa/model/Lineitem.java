@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Lineitem.findAll", query = "SELECT l FROM Lineitem l")
     , @NamedQuery(name = "Lineitem.findByQuantity", query = "SELECT l FROM Lineitem l WHERE l.quantity = :quantity")
-    , @NamedQuery(name = "Lineitem.findByTotalpricelineitem", query = "SELECT l FROM Lineitem l WHERE l.totalpricelineitem = :totalpricelineitem")
+    , @NamedQuery(name = "Lineitem.findByUnitprice", query = "SELECT l FROM Lineitem l WHERE l.unitprice = :unitprice")
     , @NamedQuery(name = "Lineitem.findByOrderid", query = "SELECT l FROM Lineitem l WHERE l.lineitemPK.orderid = :orderid")
     , @NamedQuery(name = "Lineitem.findByProductid", query = "SELECT l FROM Lineitem l WHERE l.lineitemPK.productid = :productid")})
 public class Lineitem implements Serializable {
@@ -42,8 +42,8 @@ public class Lineitem implements Serializable {
     private int quantity;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "TOTALPRICELINEITEM")
-    private int totalpricelineitem;
+    @Column(name = "UNITPRICE")
+    private double unitprice;
     @JoinColumn(name = "ORDERID", referencedColumnName = "ORDERID", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Orders orders;
@@ -54,14 +54,17 @@ public class Lineitem implements Serializable {
     public Lineitem() {
     }
 
-    public Lineitem(LineitemPK lineitemPK) {
-        this.lineitemPK = lineitemPK;
+    public Lineitem(Product p) {
+        this.product = p;
+        this.quantity = 1;
+        this.unitprice = p.getPrice();
     }
 
-    public Lineitem(LineitemPK lineitemPK, int quantity, int totalpricelineitem) {
-        this.lineitemPK = lineitemPK;
+    public Lineitem(Orders orders, Product product, int quantity, double unitprice) {
+        this.orders = orders;
+        this.product = product;
         this.quantity = quantity;
-        this.totalpricelineitem = totalpricelineitem;
+        this.unitprice = unitprice;
     }
 
     public Lineitem(int orderid, String productid) {
@@ -84,12 +87,12 @@ public class Lineitem implements Serializable {
         this.quantity = quantity;
     }
 
-    public int getTotalpricelineitem() {
-        return totalpricelineitem;
+    public double getUnitprice() {
+        return unitprice;
     }
 
-    public void setTotalpricelineitem(int totalpricelineitem) {
-        this.totalpricelineitem = totalpricelineitem;
+    public void setUnitprice(double unitprice) {
+        this.unitprice = unitprice;
     }
 
     public Orders getOrders() {
@@ -108,6 +111,12 @@ public class Lineitem implements Serializable {
         this.product = product;
     }
 
+        public double getTotalLinePrice() {
+        double total = 0;
+        total = this.quantity * this.unitprice;
+        return total;
+    }
+        
     @Override
     public int hashCode() {
         int hash = 0;

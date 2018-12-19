@@ -45,7 +45,7 @@ public class Payment implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "TOTALPRICE")
-    private int totalprice;
+    private double totalprice;
     @JoinColumn(name = "ORDERID", referencedColumnName = "ORDERID")
     @OneToOne(optional = false)
     private Orders orderid;
@@ -57,8 +57,8 @@ public class Payment implements Serializable {
         this.paymentid = paymentid;
     }
 
-    public Payment(Integer paymentid, int totalprice) {
-        this.paymentid = paymentid;
+    public Payment(String methods, double totalprice) {
+        this.methods = methods;
         this.totalprice = totalprice;
     }
 
@@ -78,11 +78,11 @@ public class Payment implements Serializable {
         this.methods = methods;
     }
 
-    public int getTotalprice() {
+    public double getTotalprice() {
         return totalprice;
     }
 
-    public void setTotalprice(int totalprice) {
+    public void setTotalprice(double totalprice) {
         this.totalprice = totalprice;
     }
 

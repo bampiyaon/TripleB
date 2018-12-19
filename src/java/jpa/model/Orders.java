@@ -60,8 +60,8 @@ public class Orders implements Serializable {
     private Account username;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
     private List<Lineitem> lineitemList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderid")
-    private List<Shipping> shippingList;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "orderid")
+    private Shipping shipping;
 
     public Orders() {
     }
@@ -119,13 +119,12 @@ public class Orders implements Serializable {
         this.lineitemList = lineitemList;
     }
 
-    @XmlTransient
-    public List<Shipping> getShippingList() {
-        return shippingList;
+    public Shipping getShipping() {
+        return shipping;
     }
 
-    public void setShippingList(List<Shipping> shippingList) {
-        this.shippingList = shippingList;
+    public void setShipping(Shipping shipping) {
+        this.shipping = shipping;
     }
 
     @Override

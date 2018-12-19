@@ -80,9 +80,6 @@ public class AddressJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findAddress(address.getAddressid()) != null) {
-                throw new PreexistingEntityException("Address " + address + " already exists.", ex);
-            }
             throw ex;
         } finally {
             if (em != null) {

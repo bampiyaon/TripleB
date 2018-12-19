@@ -6,17 +6,19 @@
 package jpa.model.controller;
 
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import javax.transaction.UserTransaction;
 import jpa.model.Address;
 import jpa.model.Orders;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.transaction.UserTransaction;
 import jpa.model.Shipping;
+import jpa.model.controller.exceptions.IllegalOrphanException;
 import jpa.model.controller.exceptions.NonexistentEntityException;
 import jpa.model.controller.exceptions.PreexistingEntityException;
 import jpa.model.controller.exceptions.RollbackFailureException;
@@ -38,7 +40,21 @@ public class ShippingJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Shipping shipping) throws PreexistingEntityException, RollbackFailureException, Exception {
+    public void create(Shipping shipping) throws IllegalOrphanException, PreexistingEntityException, RollbackFailureException, Exception {
+        List<String> illegalOrphanMessages = null;
+        Orders orderidOrphanCheck = shipping.getOrderid();
+        if (orderidOrphanCheck != null) {
+            Shipping oldShippingOfOrderid = orderidOrphanCheck.getShipping();
+            if (oldShippingOfOrderid != null) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("The Orders " + orderidOrphanCheck + " already has an item of type Shipping whose orderid column cannot be null. Please make another selection for the orderid field.");
+            }
+        }
+        if (illegalOrphanMessages != null) {
+            throw new IllegalOrphanException(illegalOrphanMessages);
+        }
         EntityManager em = null;
         try {
             utx.begin();
@@ -59,7 +75,7 @@ public class ShippingJpaController implements Serializable {
                 addressid = em.merge(addressid);
             }
             if (orderid != null) {
-                orderid.getShippingList().add(shipping);
+                orderid.setShipping(shipping);
                 orderid = em.merge(orderid);
             }
             utx.commit();
@@ -80,7 +96,7 @@ public class ShippingJpaController implements Serializable {
         }
     }
 
-    public void edit(Shipping shipping) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void edit(Shipping shipping) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
@@ -90,6 +106,19 @@ public class ShippingJpaController implements Serializable {
             Address addressidNew = shipping.getAddressid();
             Orders orderidOld = persistentShipping.getOrderid();
             Orders orderidNew = shipping.getOrderid();
+            List<String> illegalOrphanMessages = null;
+            if (orderidNew != null && !orderidNew.equals(orderidOld)) {
+                Shipping oldShippingOfOrderid = orderidNew.getShipping();
+                if (oldShippingOfOrderid != null) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("The Orders " + orderidNew + " already has an item of type Shipping whose orderid column cannot be null. Please make another selection for the orderid field.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
             if (addressidNew != null) {
                 addressidNew = em.getReference(addressidNew.getClass(), addressidNew.getAddressid());
                 shipping.setAddressid(addressidNew);
@@ -108,11 +137,11 @@ public class ShippingJpaController implements Serializable {
                 addressidNew = em.merge(addressidNew);
             }
             if (orderidOld != null && !orderidOld.equals(orderidNew)) {
-                orderidOld.getShippingList().remove(shipping);
+                orderidOld.setShipping(null);
                 orderidOld = em.merge(orderidOld);
             }
             if (orderidNew != null && !orderidNew.equals(orderidOld)) {
-                orderidNew.getShippingList().add(shipping);
+                orderidNew.setShipping(shipping);
                 orderidNew = em.merge(orderidNew);
             }
             utx.commit();
@@ -156,7 +185,7 @@ public class ShippingJpaController implements Serializable {
             }
             Orders orderid = shipping.getOrderid();
             if (orderid != null) {
-                orderid.getShippingList().remove(shipping);
+                orderid.setShipping(null);
                 orderid = em.merge(orderid);
             }
             em.remove(shipping);

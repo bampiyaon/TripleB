@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import jpa.model.Payment;
 import jpa.model.Account;
+import jpa.model.Shipping;
 import jpa.model.Lineitem;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.transaction.UserTransaction;
 import jpa.model.Orders;
-import jpa.model.Shipping;
 import jpa.model.controller.exceptions.IllegalOrphanException;
 import jpa.model.controller.exceptions.NonexistentEntityException;
 import jpa.model.controller.exceptions.PreexistingEntityException;
@@ -46,9 +46,6 @@ public class OrdersJpaController implements Serializable {
         if (orders.getLineitemList() == null) {
             orders.setLineitemList(new ArrayList<Lineitem>());
         }
-        if (orders.getShippingList() == null) {
-            orders.setShippingList(new ArrayList<Shipping>());
-        }
         EntityManager em = null;
         try {
             utx.begin();
@@ -63,18 +60,17 @@ public class OrdersJpaController implements Serializable {
                 username = em.getReference(username.getClass(), username.getUsername());
                 orders.setUsername(username);
             }
+            Shipping shipping = orders.getShipping();
+            if (shipping != null) {
+                shipping = em.getReference(shipping.getClass(), shipping.getShippingid());
+                orders.setShipping(shipping);
+            }
             List<Lineitem> attachedLineitemList = new ArrayList<Lineitem>();
             for (Lineitem lineitemListLineitemToAttach : orders.getLineitemList()) {
                 lineitemListLineitemToAttach = em.getReference(lineitemListLineitemToAttach.getClass(), lineitemListLineitemToAttach.getLineitemPK());
                 attachedLineitemList.add(lineitemListLineitemToAttach);
             }
             orders.setLineitemList(attachedLineitemList);
-            List<Shipping> attachedShippingList = new ArrayList<Shipping>();
-            for (Shipping shippingListShippingToAttach : orders.getShippingList()) {
-                shippingListShippingToAttach = em.getReference(shippingListShippingToAttach.getClass(), shippingListShippingToAttach.getShippingid());
-                attachedShippingList.add(shippingListShippingToAttach);
-            }
-            orders.setShippingList(attachedShippingList);
             em.persist(orders);
             if (payment != null) {
                 Orders oldOrderidOfPayment = payment.getOrderid();
@@ -89,6 +85,15 @@ public class OrdersJpaController implements Serializable {
                 username.getOrdersList().add(orders);
                 username = em.merge(username);
             }
+            if (shipping != null) {
+                Orders oldOrderidOfShipping = shipping.getOrderid();
+                if (oldOrderidOfShipping != null) {
+                    oldOrderidOfShipping.setShipping(null);
+                    oldOrderidOfShipping = em.merge(oldOrderidOfShipping);
+                }
+                shipping.setOrderid(orders);
+                shipping = em.merge(shipping);
+            }
             for (Lineitem lineitemListLineitem : orders.getLineitemList()) {
                 Orders oldOrdersOfLineitemListLineitem = lineitemListLineitem.getOrders();
                 lineitemListLineitem.setOrders(orders);
@@ -96,15 +101,6 @@ public class OrdersJpaController implements Serializable {
                 if (oldOrdersOfLineitemListLineitem != null) {
                     oldOrdersOfLineitemListLineitem.getLineitemList().remove(lineitemListLineitem);
                     oldOrdersOfLineitemListLineitem = em.merge(oldOrdersOfLineitemListLineitem);
-                }
-            }
-            for (Shipping shippingListShipping : orders.getShippingList()) {
-                Orders oldOrderidOfShippingListShipping = shippingListShipping.getOrderid();
-                shippingListShipping.setOrderid(orders);
-                shippingListShipping = em.merge(shippingListShipping);
-                if (oldOrderidOfShippingListShipping != null) {
-                    oldOrderidOfShippingListShipping.getShippingList().remove(shippingListShipping);
-                    oldOrderidOfShippingListShipping = em.merge(oldOrderidOfShippingListShipping);
                 }
             }
             utx.commit();
@@ -135,10 +131,10 @@ public class OrdersJpaController implements Serializable {
             Payment paymentNew = orders.getPayment();
             Account usernameOld = persistentOrders.getUsername();
             Account usernameNew = orders.getUsername();
+            Shipping shippingOld = persistentOrders.getShipping();
+            Shipping shippingNew = orders.getShipping();
             List<Lineitem> lineitemListOld = persistentOrders.getLineitemList();
             List<Lineitem> lineitemListNew = orders.getLineitemList();
-            List<Shipping> shippingListOld = persistentOrders.getShippingList();
-            List<Shipping> shippingListNew = orders.getShippingList();
             List<String> illegalOrphanMessages = null;
             if (paymentOld != null && !paymentOld.equals(paymentNew)) {
                 if (illegalOrphanMessages == null) {
@@ -146,20 +142,18 @@ public class OrdersJpaController implements Serializable {
                 }
                 illegalOrphanMessages.add("You must retain Payment " + paymentOld + " since its orderid field is not nullable.");
             }
+            if (shippingOld != null && !shippingOld.equals(shippingNew)) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("You must retain Shipping " + shippingOld + " since its orderid field is not nullable.");
+            }
             for (Lineitem lineitemListOldLineitem : lineitemListOld) {
                 if (!lineitemListNew.contains(lineitemListOldLineitem)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
                     illegalOrphanMessages.add("You must retain Lineitem " + lineitemListOldLineitem + " since its orders field is not nullable.");
-                }
-            }
-            for (Shipping shippingListOldShipping : shippingListOld) {
-                if (!shippingListNew.contains(shippingListOldShipping)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Shipping " + shippingListOldShipping + " since its orderid field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -173,6 +167,10 @@ public class OrdersJpaController implements Serializable {
                 usernameNew = em.getReference(usernameNew.getClass(), usernameNew.getUsername());
                 orders.setUsername(usernameNew);
             }
+            if (shippingNew != null) {
+                shippingNew = em.getReference(shippingNew.getClass(), shippingNew.getShippingid());
+                orders.setShipping(shippingNew);
+            }
             List<Lineitem> attachedLineitemListNew = new ArrayList<Lineitem>();
             for (Lineitem lineitemListNewLineitemToAttach : lineitemListNew) {
                 lineitemListNewLineitemToAttach = em.getReference(lineitemListNewLineitemToAttach.getClass(), lineitemListNewLineitemToAttach.getLineitemPK());
@@ -180,13 +178,6 @@ public class OrdersJpaController implements Serializable {
             }
             lineitemListNew = attachedLineitemListNew;
             orders.setLineitemList(lineitemListNew);
-            List<Shipping> attachedShippingListNew = new ArrayList<Shipping>();
-            for (Shipping shippingListNewShippingToAttach : shippingListNew) {
-                shippingListNewShippingToAttach = em.getReference(shippingListNewShippingToAttach.getClass(), shippingListNewShippingToAttach.getShippingid());
-                attachedShippingListNew.add(shippingListNewShippingToAttach);
-            }
-            shippingListNew = attachedShippingListNew;
-            orders.setShippingList(shippingListNew);
             orders = em.merge(orders);
             if (paymentNew != null && !paymentNew.equals(paymentOld)) {
                 Orders oldOrderidOfPayment = paymentNew.getOrderid();
@@ -205,6 +196,15 @@ public class OrdersJpaController implements Serializable {
                 usernameNew.getOrdersList().add(orders);
                 usernameNew = em.merge(usernameNew);
             }
+            if (shippingNew != null && !shippingNew.equals(shippingOld)) {
+                Orders oldOrderidOfShipping = shippingNew.getOrderid();
+                if (oldOrderidOfShipping != null) {
+                    oldOrderidOfShipping.setShipping(null);
+                    oldOrderidOfShipping = em.merge(oldOrderidOfShipping);
+                }
+                shippingNew.setOrderid(orders);
+                shippingNew = em.merge(shippingNew);
+            }
             for (Lineitem lineitemListNewLineitem : lineitemListNew) {
                 if (!lineitemListOld.contains(lineitemListNewLineitem)) {
                     Orders oldOrdersOfLineitemListNewLineitem = lineitemListNewLineitem.getOrders();
@@ -213,17 +213,6 @@ public class OrdersJpaController implements Serializable {
                     if (oldOrdersOfLineitemListNewLineitem != null && !oldOrdersOfLineitemListNewLineitem.equals(orders)) {
                         oldOrdersOfLineitemListNewLineitem.getLineitemList().remove(lineitemListNewLineitem);
                         oldOrdersOfLineitemListNewLineitem = em.merge(oldOrdersOfLineitemListNewLineitem);
-                    }
-                }
-            }
-            for (Shipping shippingListNewShipping : shippingListNew) {
-                if (!shippingListOld.contains(shippingListNewShipping)) {
-                    Orders oldOrderidOfShippingListNewShipping = shippingListNewShipping.getOrderid();
-                    shippingListNewShipping.setOrderid(orders);
-                    shippingListNewShipping = em.merge(shippingListNewShipping);
-                    if (oldOrderidOfShippingListNewShipping != null && !oldOrderidOfShippingListNewShipping.equals(orders)) {
-                        oldOrderidOfShippingListNewShipping.getShippingList().remove(shippingListNewShipping);
-                        oldOrderidOfShippingListNewShipping = em.merge(oldOrderidOfShippingListNewShipping);
                     }
                 }
             }
@@ -269,19 +258,19 @@ public class OrdersJpaController implements Serializable {
                 }
                 illegalOrphanMessages.add("This Orders (" + orders + ") cannot be destroyed since the Payment " + paymentOrphanCheck + " in its payment field has a non-nullable orderid field.");
             }
+            Shipping shippingOrphanCheck = orders.getShipping();
+            if (shippingOrphanCheck != null) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Orders (" + orders + ") cannot be destroyed since the Shipping " + shippingOrphanCheck + " in its shipping field has a non-nullable orderid field.");
+            }
             List<Lineitem> lineitemListOrphanCheck = orders.getLineitemList();
             for (Lineitem lineitemListOrphanCheckLineitem : lineitemListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
                 illegalOrphanMessages.add("This Orders (" + orders + ") cannot be destroyed since the Lineitem " + lineitemListOrphanCheckLineitem + " in its lineitemList field has a non-nullable orders field.");
-            }
-            List<Shipping> shippingListOrphanCheck = orders.getShippingList();
-            for (Shipping shippingListOrphanCheckShipping : shippingListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Orders (" + orders + ") cannot be destroyed since the Shipping " + shippingListOrphanCheckShipping + " in its shippingList field has a non-nullable orderid field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

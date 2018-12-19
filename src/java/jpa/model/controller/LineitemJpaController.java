@@ -43,8 +43,8 @@ public class LineitemJpaController implements Serializable {
         if (lineitem.getLineitemPK() == null) {
             lineitem.setLineitemPK(new LineitemPK());
         }
-        lineitem.getLineitemPK().setProductid(lineitem.getProduct().getProductid());
         lineitem.getLineitemPK().setOrderid(lineitem.getOrders().getOrderid());
+        lineitem.getLineitemPK().setProductid(lineitem.getProduct().getProductid());
         EntityManager em = null;
         try {
             utx.begin();
@@ -87,8 +87,8 @@ public class LineitemJpaController implements Serializable {
     }
 
     public void edit(Lineitem lineitem) throws NonexistentEntityException, RollbackFailureException, Exception {
-        lineitem.getLineitemPK().setProductid(lineitem.getProduct().getProductid());
         lineitem.getLineitemPK().setOrderid(lineitem.getOrders().getOrderid());
+        lineitem.getLineitemPK().setProductid(lineitem.getProduct().getProductid());
         EntityManager em = null;
         try {
             utx.begin();

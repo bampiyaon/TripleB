@@ -19,14 +19,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
 import jpa.model.Account;
-import jpa.model.Orders;
-import jpa.model.Payment;
+import jpa.model.Address;
 import jpa.model.controller.AccountJpaController;
-import jpa.model.controller.OrdersJpaController;
-import jpa.model.controller.PaymentJpaController;
+import jpa.model.controller.AddressJpaController;
 import jpa.model.controller.exceptions.NonexistentEntityException;
 import jpa.model.controller.exceptions.RollbackFailureException;
 
@@ -51,27 +48,28 @@ public class AddAddressServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, RollbackFailureException, Exception {
+            throws ServletException, IOException, Exception {
         String location = request.getParameter("location");
         
         if (location != null && location.trim().length() > 0) {
             AccountJpaController accountJpaCtrl = new AccountJpaController(utx, emf);
             Account account = (Account) request.getSession().getAttribute("customer");
             
-            OrdersJpaController ordersJpaCtrl = new OrdersJpaController(utx, emf);
-            Orders orders = new Orders(Integer.valueOf(location));
+            AddressJpaController addressJpaCtrl = new AddressJpaController(utx, emf);
+            Address address = new Address(location);
+            
             
             if (account != null) {
-                orders.setOrderid(orders.getOrderid());
+                address.setUsername(account);
                 
-                List<Orders> ordersList = account.getOrdersList();
-                if (ordersList == null) {
-                    ordersList = new ArrayList<>();
+                List<Address> addressList = account.getAddressList();
+                if (addressList == null) {
+                    addressList = new ArrayList<>();
                 }
-                ordersList.add(orders);
+                addressList.add(address);
                 
                 try {
-                    ordersJpaCtrl.create(orders);
+                    addressJpaCtrl.create(address);
                     accountJpaCtrl.edit(account);
                 } catch (NonexistentEntityException ex) {
                     Logger.getLogger(AddAddressServlet.class.getName()).log(Level.SEVERE, null, ex);

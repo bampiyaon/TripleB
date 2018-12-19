@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -52,14 +53,15 @@ public class Shipping implements Serializable {
     @ManyToOne(optional = false)
     private Address addressid;
     @JoinColumn(name = "ORDERID", referencedColumnName = "ORDERID")
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     private Orders orderid;
 
     public Shipping() {
     }
 
-    public Shipping(Integer shippingid) {
-        this.shippingid = shippingid;
+    public Shipping(Date shipDate, String status) {
+        this.shippingdate = shipDate;
+        this.status = status;
     }
 
     public Integer getShippingid() {

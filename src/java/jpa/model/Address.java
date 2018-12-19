@@ -54,8 +54,8 @@ public class Address implements Serializable {
     public Address() {
     }
 
-    public Address(Integer addressid) {
-        this.addressid = addressid;
+    public Address(String location) {
+        this.location = location;
     }
 
     public Integer getAddressid() {
