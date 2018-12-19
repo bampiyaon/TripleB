@@ -56,32 +56,31 @@
                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 66%"></div>
             </div>
         </fieldset>
-        <c:set value = "${sessionScope.customer.addressList}" var = "customerAddress" />
-        <c:choose>
-            <c:when test = "${empty customerAddress}">
-                <form action="AddAddress" method="post">
-                    <div class="form-group">
-                        <h3>Shipping address in KMUTT</h3>
-                        <input type="text" class="form-control" id="InputStudentId" placeholder="ex. CB2301" name="location" required> 
-                        <small id="emailHelp" class="form-text text-muted">Please Enter in English</small>
-                        <input type="submit" class="btn btn-primary" value="Add Address"/>
-                    </div>
-                    <div colspan="2"><p style="color: red">${message}</p></div>
-                </form>
-            </c:when>
-            <c:otherwise>
-                <form action = "Checkout" method = "post">
-                    <c:forEach items = "${customerAddress}" var = "address">
-                        <div>
-                            <span class = "addressInfo">
-                                <input type = "radio" name = "addressId" value = "${address.addressid}" required/>
-                                ${address.location}
-                            </span>
+        <c:set value = "${sessionScope.customer.addressList}" var = "customerAddress"/>
+            <c:choose>
+                <c:when test = "${empty customerAddress}">
+                    <form action="AddAddress" method="post">
+                        <div class="form-group">
+                            <h3>Shipping address in KMUTT</h3>
+                            <input type="text" class="form-control" id="InputStudentId" placeholder="ex. CB2301" name="location" width="20" required> 
+                            <small id="emailHelp" class="form-text text-muted">Please Enter in English</small>
+                            <input type="submit" class="btn btn-primary" value="Add Address"/>
                         </div>
-                    </c:forEach>
-                </c:otherwise>
-            </c:choose>
+                    </form>
+                </c:when>
+                <c:otherwise>
+                    <form action = "Checkout" method = "post">
+                        <c:forEach items = "${customerAddress}" var = "address">
+                            <div>
+                                <span class = "addressInfo">
+                                    <input type = "radio" name = "addressId" value = "${address.addressid}" required/>
+                                    ${address.location}
+                                </span>
+                            </div>
 
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
             <fieldset class="form-group">
                 <h3>Payment Methods</h3>
                 <div class="form-check">
@@ -100,30 +99,30 @@
                         <label>EXP:</label>
                         <input class = "expDate" type = "number" min = "1" max = "12" required> / <input class = "expDate" type = "number" min = "2018" max = "2024" required>
                     </span>
-
+                    <input type="submit" class="btn btn-primary" value="Pay Now"/>
                 </div>
             </fieldset>
-            <input type="submit" class="btn btn-primary" value="Pay Now"/>
-
-
+            
+        </form>
     </div>
-    <style>
-        .addressField{
-            display: block;
-        }
-        .expDate{
-            width: 60px;
-        }
-        .shipping, .payment{
-            margin: 50px;
-            width: 60%;
-            border: black solid medium;
-        }
-        .addressField, .paymentField, .addressInfo{
-            display: block;
-            margin: 10px;
-        }
-    </style>
+</div>
+<style>
+    .addressField{
+        display: block;
+    }
+    .expDate{
+        width: 60px;
+    }
+    .shipping, .payment{
+        margin: 50px;
+        width: 60%;
+        border: black solid medium;
+    }
+    .addressField, .paymentField, .addressInfo{
+        display: block;
+        margin: 10px;
+    }
+</style>
 
 </body>
 </html>

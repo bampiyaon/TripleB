@@ -6,9 +6,7 @@
 package servlet.account;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,6 +36,7 @@ public class AddAddressServlet extends HttpServlet {
 
     @Resource
     UserTransaction utx;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -50,24 +49,23 @@ public class AddAddressServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, Exception {
         String location = request.getParameter("location");
-        
+
         if (location != null && location.trim().length() > 0) {
             AccountJpaController accountJpaCtrl = new AccountJpaController(utx, emf);
             Account account = (Account) request.getSession().getAttribute("customer");
-            
+
             AddressJpaController addressJpaCtrl = new AddressJpaController(utx, emf);
             Address address = new Address(location);
-            
-            
+
             if (account != null) {
                 address.setUsername(account);
-                
+
                 List<Address> addressList = account.getAddressList();
                 if (addressList == null) {
                     addressList = new ArrayList<>();
                 }
                 addressList.add(address);
-                
+
                 try {
                     addressJpaCtrl.create(address);
                     accountJpaCtrl.edit(account);
