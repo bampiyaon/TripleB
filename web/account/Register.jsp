@@ -83,6 +83,7 @@
                         <label for="username">Username</label>
                         <input type="number" class="form-control" id="InputStudentId" placeholder="Enter student ID ex.60xxxxxxxxx" name="username" required>
                         <small id="emailHelp" class="form-text text-muted">Please use your student id</small>
+                        <span style = "color:red">${emailNotice}</span><br>
                     </div>
                     <div class="form-group">
                         <label for="InputPassword">Password</label>

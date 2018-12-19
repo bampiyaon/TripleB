@@ -50,7 +50,6 @@ public class LoginServlet extends HttpServlet {
             request.setAttribute("returnUrl", returnUrl);
         }
         
-        System.out.println("Test : "+returnUrl);
 
         if (username != null && username.trim().length() > 0 && password != null && password.trim().length() > 0) {
             AccountJpaController customerJpaCtrl = new AccountJpaController(utx, emf);

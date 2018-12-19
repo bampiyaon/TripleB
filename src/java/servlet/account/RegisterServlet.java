@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -65,8 +66,19 @@ public class RegisterServlet extends HttpServlet {
                 account.setPassword(password);
 
                 try {
+                    AccountJpaController accountJpaController = new AccountJpaController(utx, emf);
+                List<Account> listAccount = accountJpaController.findAccountEntities();
+                    
+                if (listAccount != null) {
+                    for (Account a : listAccount) {
+                        if (username.equalsIgnoreCase(a.getUsername())) {
+                            request.setAttribute("emailNotice", "Sorry, this username belongs to an existing account.");
+                            getServletContext().getRequestDispatcher("/account/Register.jsp").forward(request, response);
+                            return;
+                        }
+                    }
+                }
                     actrl.create(account);
-//                        actrl.edit(account);
                 } catch (RollbackFailureException ex) {
                     Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (Exception ex) {
@@ -77,7 +89,7 @@ public class RegisterServlet extends HttpServlet {
                 return;
                 
             }
-            request.setAttribute("message", "error");
+            
             
         }
         

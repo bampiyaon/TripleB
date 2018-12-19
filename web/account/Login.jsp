@@ -61,6 +61,7 @@
                         <td>Password :</td>
                         <td><input type="password" name="password" required</td>
                     </tr>
+                    <span style = "color:red">${loginfailed}</span><br>
                     <tr>
                         <td></td>
                         <td><input type="submit" class="btn btn-primary" value="Login"</td>
