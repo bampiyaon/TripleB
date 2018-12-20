@@ -44,12 +44,6 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String returnUrl = request.getParameter("returnUrl");
-        
-        if (returnUrl != null) {
-            request.setAttribute("returnUrl", returnUrl);
-        }
-        
 
         if (username != null && username.trim().length() > 0 && password != null && password.trim().length() > 0) {
             AccountJpaController customerJpaCtrl = new AccountJpaController(utx, emf);

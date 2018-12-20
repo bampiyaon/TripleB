@@ -71,7 +71,7 @@ public class RegisterServlet extends HttpServlet {
                     if (listAccount != null) {
                         for (Account a : listAccount) {
                             if (username.equalsIgnoreCase(a.getUsername())) {
-                                request.setAttribute("emailNotice", "Sorry, this username belongs to an existing account.");
+                                request.setAttribute("usernameNotice", "Sorry, this username belongs to an existing account.");
                                 getServletContext().getRequestDispatcher("/account/Register.jsp").forward(request, response);
                                 return;
                             }

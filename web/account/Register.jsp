@@ -26,68 +26,99 @@
 
         <title>Sign up</title>
     </head>
-    <body>
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #696969">
-      <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="index.html">TripleB</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          Menu
-          <i class="fas fa-bars"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive" style="background-color: #696969">
-          <ul class="navbar-nav text-uppercase ml-auto">
-              <li class="nav-item">
-                <a class="nav-link js-scroll-trigger" href="index.html">home</a>
-            <li class="nav-item">
-                <a class="nav-link js-scroll-trigger" href="Register">Sign up</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link js-scroll-trigger" href="ProductList">Product</a>
-            </li>
-           
-            
-<!--            <c:if test="${cart != null}">
-                <a class="navbar-brand" href="ShowCart" title="Cart"><img src="basket.png" width="25">${cart.totalQuantity}</a>
-                </c:if>-->
-           
-            <c:choose>
-                <c:when test="${sessionScope.customer != null}">
-                    <a href="Logout">${sessionScope.customer.firstname}</a>
-                </c:when>
-                <c:otherwise>
-<!--                    <a href="Login?returnUrl=${requestScope['javax.servlet.forward.request_uri']}?${requestScope['javax.servlet.forward.query_string']}">Hello Guest</a>-->
-                </c:otherwise>
-            </c:choose>
-            
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <c:choose>
+            <c:when test="${sessionScope.customer != null}">
+                Hello ${sessionScope.customer.firstname}
+                <a href="OrderHistory">Recent Orders</a>
+                <a href="Logout">Logout</a>
+            </c:when>
+            <c:otherwise>
+                <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #696969">
+                    <div class="container">
+                        <a class="navbar-brand js-scroll-trigger" href="index.html">TripleB</a>
+                        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                            Menu
+                            <i class="fas fa-bars"></i>
+                        </button>
 
+                        <div class="collapse navbar-collapse" id="navbarResponsive" style="background-color: #696969">
+                            <ul class="navbar-nav text-uppercase ml-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link js-scroll-trigger" href="index.html">home</a>
+                                <li class="nav-item">
+                                    <a class="nav-link js-scroll-trigger" href="Register">Sign up</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link js-scroll-trigger" href="Login?returnUrl=${requestScope['javax.servlet.forward.request_uri']}?${requestScope['javax.servlet.forward.query_string']}">Login</a>
+                                </li>
+                            </ul>
+
+                            <p>Hello Guest</p>
+                        </c:otherwise>
+                    </c:choose>
+                    <div>
+                        <a href="ShowCart" title="Cart">
+                            <img src="images/payment/basket.png" width="25">${cart.totalQuantity != null ? cart.totalQuantity : 0} 
+                        </a>
+                    </div> 
+
+                    <%--<c:if test="${cart != null}">--%>
+                    <!--<a class="navbar-brand" href="ShowCart" title="Cart"><img src="images/payment/basket.png" w<div >
+                        <a href="ShowCart" title="Cart">
+                           <img src="images/payment/basket.png" width="25">${cart.totalQuantity != null ? cart.totalQuantity : 0} 
+                        </a>
+                    </div> idth="25">${cart.totalQuantity}</a>-->
+                    <%--</c:if>--%>
+
+
+
+                                <!--<a href="Login?returnUrl=${requestScope['javax.servlet.forward.request_uri']}?${requestScope['javax.servlet.forward.query_string']}">Login</a>-->
+
+
+                    <form action = "Search" class="form-inline my-2 my-lg-0">
+                        <select name = "searchOption" required class="form-control">
+                            <option value = "all">All</option>
+                            <option value = "101">Uncle Num Square</option>
+                            <option value = "102">Jaidee Shop</option>
+                            <option value = "103">Mana Shop</option>
+                            <option value = "104">Islamic Food Shop</option>
+                            <option value = "105">KFC Shop no.1</option>
+                            <option value = "106">KFC Shop no.2</option>
+                            <option value = "107">KFC Shop no.3</option>
+                            <option value = "108">KFC Shop no.4</option>
+                            <option value = "109">KFC Shop no.5</option>
+                            <option value = "110">KFC Shop no.6</option>
+                        </select>
+                        <input class="form-control mr-sm-2" type = "text" name = "keyword" placeholder="Search">
+                        <input class="btn btn-secondary my-2 my-sm-0" type = "submit" value = "Search">
+                    </form>
+                </div>
+            </div>
+        </nav>
         
-        <div class="container" style="margin-top:200px">
+        <div class="container" style="margin-top:120px">
             <h1>Register</h1>
             <form action="Register" method="post">
                 <fieldset>
                     <div class="form-group">
                         <label for="first">Your Firstname</label>
-                        <input type="text" class="form-control" id="InputStudentId" aria-describedby="emailHelp" placeholder="Enter your firstname"  name="firstname" required>
+                        <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter your firstname"  name="firstname" required>
                         <small id="emailHelp" class="form-text text-muted">Please Enter in English</small>
                     </div>
                     <div class="form-group">
                         <label for="lastname">Your Lastname</label>
-                        <input type="text" class="form-control" id="InputStudentId" placeholder="Enter your lastname" name="lastname" required>
+                        <input type="text" class="form-control" placeholder="Enter your lastname" name="lastname" required>
                         <small id="emailHelp" class="form-text text-muted">Please Enter in English</small>
                     </div>
                     <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="number" class="form-control" id="InputStudentId" placeholder="Enter student ID ex.60xxxxxxxxx" name="username" required>
+                        <label for="username">Username</label> &nbsp <span style = "color:red">${usernameNotice}</span><br>
+                        <input type="number" class="form-control" placeholder="Enter student ID ex.60xxxxxxxxx" name="username" required>
                         <small id="emailHelp" class="form-text text-muted">Please use your student id</small>
-                        <span style = "color:red">${emailNotice}</span><br>
+                        
                     </div>
                     <div class="form-group">
                         <label for="InputPassword">Password</label>
-                        <input type="password" class="form-control" id="InputPassword" placeholder="Password" name="password" required>
+                        <input type="password" class="form-control" placeholder="Password" name="password" required>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Submit</button>

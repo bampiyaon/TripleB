@@ -10,7 +10,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Login</title>
-         <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
         <!-- Custom fonts for this template -->
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -24,9 +24,9 @@
         <link rel="stylesheet" href="https://bootswatch.com/4/journal/bootstrap.min.css">
     </head>
     <body>
-         <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #696969">
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #696969">
             <div class="container" >
-                <a class="navbar-brand js-scroll-trigger" href="index.html">TripleBB</a>
+                <a class="navbar-brand js-scroll-trigger" href="index.html">TripleB</a>
                 <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     Menu
                     <i class="fas fa-bars"></i>
@@ -39,15 +39,12 @@
                         <li class="nav-item">
                             <a class="nav-link js-scroll-trigger" href="ProductList">Product</a>
                         </li>
-                        
-                      
-
                     </ul>                       
                 </div>
             </div>
         </nav> 
 
-       
+
         <div class="container" >
             <form action="Login" method="post">
                 <input type="hidden" name="returnUrl" value="${returnUrl}">
@@ -63,9 +60,9 @@
                     </tr>
                     <span style = "color:red">${loginfailed}</span><br>
                     <tr>
-                        <td></td>
+                        <td><a href = "Register">Don't have an account?</a></td>
                         <td><input type="submit" class="btn btn-primary" value="Login"</td>
-
+                    
                     </tr>
                 </table>
             </form>     
