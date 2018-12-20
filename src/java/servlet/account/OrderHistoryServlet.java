@@ -3,35 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package servlet;
+package servlet.account;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.annotation.Resource;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
+import java.util.List;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.transaction.UserTransaction;
-import jpa.model.Product;
-import jpa.model.controller.ProductJpaController;
-import model.ShoppingCart;
+import jpa.model.Account;
+import jpa.model.Orders;
 
 /**
  *
  * @author piyao
  */
-public class AddItemToCartServlet extends HttpServlet {
-
-    @PersistenceUnit(unitName = "WebAppProjPU")
-    EntityManagerFactory emf;
-
-    @Resource
-    UserTransaction utx;
+public class OrderHistoryServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,28 +33,16 @@ public class AddItemToCartServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        HttpSession session = request.getSession(true);
-        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
-        if (cart == null) {
-            cart = new ShoppingCart();
-            session.setAttribute("cart", cart);
-            
-            //เพื่อเก็บรายการสินค้าในตะกร้าจนกว่า user จะทำการ logout
-            Cookie[] cookies = request.getCookies();
-            for (Cookie ck : cookies) {
-                ck.setMaxAge(60*60);
-                response.addCookie(ck);
+        HttpSession session = request.getSession();
+        if (session != null) {
+            Account account = (Account) session.getAttribute("customer");
+            if (account != null) {
+                List<Orders> orderList = account.getOrdersList();
+                request.setAttribute("orders", orderList);
+                getServletContext().getRequestDispatcher("/account/OrderHistory.jsp").forward(request, response);
             }
         }
-        String productid = request.getParameter("productid");
-        ProductJpaController productJpaCtrl = new ProductJpaController(utx, emf);
-        Product p = productJpaCtrl.findProduct(productid);
-        cart.add(p);
-
-        session.setAttribute("cart", cart);
-        response.sendRedirect("ProductList.jsp");
-
+        response.sendError(400);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

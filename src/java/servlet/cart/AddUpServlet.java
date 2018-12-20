@@ -43,20 +43,39 @@ public class AddUpServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        HttpSession session = request.getSession(true);
-        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
-        if (cart == null) {
-            cart = new ShoppingCart();
-            session.setAttribute("cart", cart);
-        }
+        
         String productid = request.getParameter("productid");
+        HttpSession session = request.getSession(false);
         ProductJpaController productJpaCtrl = new ProductJpaController(utx, emf);
         Product p = productJpaCtrl.findProduct(productid);
-        cart.add(p);
-
-        session.setAttribute("cart", cart);
-        response.sendRedirect("ShowCart");
+        
+        if (session != null) {
+            ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("cart");
+            if (cart != null) {
+                if (productid != null) {
+                    cart.add(p);
+                    request.getSession().setAttribute("cart", cart);
+                    response.sendRedirect("ShowCart");
+                } 
+                else {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                }
+            }
+        }
+        
+//        HttpSession session = request.getSession(true);
+//        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
+//        if (cart == null) {
+//            cart = new ShoppingCart();
+//            session.setAttribute("cart", cart);
+//        }
+//        String productid = request.getParameter("productid");
+//        ProductJpaController productJpaCtrl = new ProductJpaController(utx, emf);
+//        Product p = productJpaCtrl.findProduct(productid);
+//        cart.add(p);
+//
+//        session.setAttribute("cart", cart);
+//        response.sendRedirect("ShowCart");
 
     }
 

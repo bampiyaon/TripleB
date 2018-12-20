@@ -49,12 +49,12 @@ public class ShoppingCart implements Serializable {
     }
 
     //cart.remove(p.getProductid());
-    public void remove(String productCode) {
-        cart.remove(productCode);
+    public void remove(String productid) {
+        cart.remove(productid);
     }
 
-    public Double getTotalPrice() {
-        Double sum = 0d;
+    public double getTotalPrice() {
+        double sum = 0d;
         Collection<Lineitem> lineItems = cart.values();
         for (Lineitem lineItem : lineItems) {
             sum += lineItem.getTotalLinePrice();

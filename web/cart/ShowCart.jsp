@@ -41,6 +41,9 @@
                         <li class="nav-item">
                             <a class="nav-link js-scroll-trigger" href="ProductList">Product</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="OrderHistory">Recent Order</a>
+                        </li>
                     </ul>                       
                 </div>
             </div>
@@ -91,9 +94,9 @@
             </form>
         </c:when>
         <c:otherwise>
-            <div>
+            <div class="container" style="margin-top:200px">
                 <h2>Your cart is empty.</h2>
-                <a href = "product/ProductList">Continue Shopping</a>
+                <a href = "ProductList">Continue Shopping</a>
             </div>
         </c:otherwise>
     </c:choose>
