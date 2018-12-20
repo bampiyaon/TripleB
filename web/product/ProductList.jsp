@@ -37,10 +37,6 @@
                 <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #696969">
                     <div class="container">
                         <a class="navbar-brand js-scroll-trigger" href="index.html">TripleB</a>
-                        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                            Menu
-                            <i class="fas fa-bars"></i>
-                        </button>
 
                         <div class="collapse navbar-collapse" id="navbarResponsive" style="background-color: #696969">
                             <ul class="navbar-nav text-uppercase ml-auto">
@@ -57,25 +53,14 @@
                             <p>Hello Guest</p>
                         </c:otherwise>
                     </c:choose>
+                            &nbsp;&nbsp;&nbsp;
                     <div>
                         <a href="ShowCart" title="Cart">
                             <img src="images/payment/basket.png" width="25">${cart.totalQuantity != null ? cart.totalQuantity : 0} 
                         </a>
                     </div> 
 
-                    <%--<c:if test="${cart != null}">--%>
-                    <!--<a class="navbar-brand" href="ShowCart" title="Cart"><img src="images/payment/basket.png" w<div >
-                        <a href="ShowCart" title="Cart">
-                           <img src="images/payment/basket.png" width="25">${cart.totalQuantity != null ? cart.totalQuantity : 0} 
-                        </a>
-                    </div> idth="25">${cart.totalQuantity}</a>-->
-                    <%--</c:if>--%>
-
-
-
-                                <!--<a href="Login?returnUrl=${requestScope['javax.servlet.forward.request_uri']}?${requestScope['javax.servlet.forward.query_string']}">Login</a>-->
-
-
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <form action = "Search" class="form-inline my-2 my-lg-0">
                         <select name = "searchOption" required class="form-control">
                             <option value = "all">All</option>

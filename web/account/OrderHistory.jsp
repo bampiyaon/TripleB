@@ -31,27 +31,40 @@
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #696969">
             <div class="container">
                 <a class="navbar-brand js-scroll-trigger" href="index.html">TripleB</a>
-                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                    Menu
-                    <i class="fas fa-bars"></i>
-                </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive" style="background-color: #696969">
                     <ul class="navbar-nav text-uppercase ml-auto">
                         <li class="nav-item">
                             <a class="nav-link js-scroll-trigger" href="index.html">home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link js-scroll-trigger" href="Register">Sign up</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link js-scroll-trigger" href="ProductList">Product</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="Register">Sign up</a>
+                        </li>
                     </ul>
+                    <form action = "Search" class="form-inline my-2 my-lg-0">
+                        <select name = "searchOption" required class="form-control">
+                            <option value = "all">All</option>
+                            <option value = "101">Uncle Num Square</option>
+                            <option value = "102">Jaidee Shop</option>
+                            <option value = "103">Mana Shop</option>
+                            <option value = "104">Islamic Food Shop</option>
+                            <option value = "105">KFC Shop no.1</option>
+                            <option value = "106">KFC Shop no.2</option>
+                            <option value = "107">KFC Shop no.3</option>
+                            <option value = "108">KFC Shop no.4</option>
+                            <option value = "109">KFC Shop no.5</option>
+                            <option value = "110">KFC Shop no.6</option>
+                        </select>
+                        <input class="form-control mr-sm-2" type = "text" name = "keyword" placeholder="Search">
+                        <input class="btn btn-secondary my-2 my-sm-0" type = "submit" value = "Search">
+                    </form>
                 </div>
             </div>
         </nav>
 
-                        <div class="container" style="margin-top:200px">
+                        <div class="container" style="margin-top:180px">
                             <h1>Recent Orders</h1>
 
                             <c:choose>

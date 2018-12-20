@@ -24,22 +24,39 @@
         <link rel="stylesheet" href="https://bootswatch.com/4/journal/bootstrap.min.css">
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #696969">
-            <div class="container" >
-                <a class="navbar-brand js-scroll-trigger" href="index.html">TripleB</a>
-                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                    Menu
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarResponsive" style="background-color: #696969">
-                    <ul class="navbar-nav text-uppercase ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link js-scroll-trigger" href="Register">Sign up</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link js-scroll-trigger" href="ProductList">Product</a>
-                        </li>
-                    </ul>
+       <c:choose>
+            <c:when test="${sessionScope.customer != null}">
+                Hello ${sessionScope.customer.firstname}
+                <a href="OrderHistory">Recent Orders</a>
+                <a href="Logout">Logout</a>
+            </c:when>
+            <c:otherwise>
+                <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #696969">
+                    <div class="container">
+                        <a class="navbar-brand js-scroll-trigger" href="index.html">TripleB</a>
+
+                        <div class="collapse navbar-collapse" id="navbarResponsive" style="background-color: #696969">
+                            <ul class="navbar-nav text-uppercase ml-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link js-scroll-trigger" href="index.html">home</a>
+                                <li class="nav-item">
+                                    <a class="nav-link js-scroll-trigger" href="Register">Sign up</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link js-scroll-trigger" href="Login?returnUrl=${requestScope['javax.servlet.forward.request_uri']}?${requestScope['javax.servlet.forward.query_string']}">Login</a>
+                                </li>
+                            </ul>
+
+                            <p>Hello Guest</p>
+                        </c:otherwise>
+                    </c:choose>
+                                &nbsp;&nbsp;&nbsp;
+                    <div>
+                        <a href="ShowCart" title="Cart">
+                            <img src="images/payment/basket.png" width="25">${cart.totalQuantity != null ? cart.totalQuantity : 0} 
+                        </a>
+                    </div> 
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <form action = "Search" class="form-inline my-2 my-lg-0">
                         <select name = "searchOption" required class="form-control">
                             <option value = "all">All</option>
