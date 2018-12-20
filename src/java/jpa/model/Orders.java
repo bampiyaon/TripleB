@@ -66,8 +66,9 @@ public class Orders implements Serializable {
     public Orders() {
     }
 
-    public Orders(Integer orderid) {
-        this.orderid = orderid;
+    public Orders(Date orderdate, String orderstatus) {
+        this.orderdate = orderdate;
+        this.orderstatus = orderstatus;
     }
 
     public Integer getOrderid() {

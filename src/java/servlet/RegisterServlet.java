@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package servlet.account;
+package servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.PrintWriter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -19,17 +20,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.UserTransaction;
 import jpa.model.Account;
-import jpa.model.Address;
 import jpa.model.controller.AccountJpaController;
-import jpa.model.controller.AddressJpaController;
-import jpa.model.controller.exceptions.NonexistentEntityException;
 import jpa.model.controller.exceptions.RollbackFailureException;
 
 /**
  *
  * @author piyao
  */
-public class AddAddressServlet extends HttpServlet {
+public class RegisterServlet extends HttpServlet {
 
     @PersistenceUnit(unitName = "WebAppProjPU")
     EntityManagerFactory emf;
@@ -48,40 +46,41 @@ public class AddAddressServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, Exception {
-        String location = request.getParameter("location");
 
-        if (location != null && location.trim().length() > 0) {
-            AccountJpaController accountJpaCtrl = new AccountJpaController(utx, emf);
-            Account account = (Account) request.getSession().getAttribute("customer");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String firstname = request.getParameter("firstname");
+        String lastname = request.getParameter("lastname");
+        
+        
+        if (username != null && password != null) {
+                if (username.trim().length() > 0 && password.trim().length() > 0 && firstname.trim().length() > 0
+                        && lastname.trim().length() > 0) {
+                    AccountJpaController actrl = new AccountJpaController(utx, emf);
+                    Account account = new Account(actrl.getAccountCount() + 1);
+                    int userInt = Integer.parseInt(username);
+                    
+                    account.setFirstname(firstname);
+                    account.setLastname(lastname);
+                    account.setUsername(userInt);
+                    account.setPassword(password);
 
-            AddressJpaController addressJpaCtrl = new AddressJpaController(utx, emf);
-            Address address = new Address(location);
-
-            if (account != null) {
-                address.setUsername(account);
-
-                List<Address> addressList = account.getAddressList();
-                if (addressList == null) {
-                    addressList = new ArrayList<>();
+                    try {
+                        actrl.create(account);
+//                        actrl.edit(account);
+                    } catch (RollbackFailureException ex) {
+                        Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    getServletContext().getRequestDispatcher("/ProductList").forward(request, response);
+                    return;
                 }
-                addressList.add(address);
-                
-                try {
-                    addressJpaCtrl.create(address);
-                    accountJpaCtrl.edit(account);
-
-                } catch (NonexistentEntityException ex) {
-                    Logger.getLogger(AddAddressServlet.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (RollbackFailureException ex) {
-                    Logger.getLogger(AddAddressServlet.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (Exception ex) {
-                    Logger.getLogger(AddAddressServlet.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                request.getSession().setAttribute("customer", account);
-                System.out.println("didn't go out this loop");
-            }
-            response.sendRedirect("Checkout");
         }
+        request.setAttribute("message", "error");
+        getServletContext().getRequestDispatcher("/Register.jsp").forward(request, response);
+        
+      
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -99,7 +98,7 @@ public class AddAddressServlet extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (Exception ex) {
-            Logger.getLogger(AddAddressServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -117,7 +116,7 @@ public class AddAddressServlet extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (Exception ex) {
-            Logger.getLogger(AddAddressServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -130,5 +129,6 @@ public class AddAddressServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
 
 }

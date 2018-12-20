@@ -70,9 +70,7 @@ public class CheckoutServlet extends HttpServlet {
 
                 //ORDER
                 OrdersJpaController ordersJpaCtrl = new OrdersJpaController(utx, emf);
-                Orders order = new Orders();
-                order.setOrderdate(new Date());
-                order.setOrderstatus("Pending");
+                Orders order = new Orders(new Date(), "Pending");
                 order.setUsername(account);
 
                 try {
@@ -166,7 +164,7 @@ public class CheckoutServlet extends HttpServlet {
                 //CLEAR CART
                 request.getSession().setAttribute("cart", null);
                 request.setAttribute("order", order);
-                getServletContext().getRequestDispatcher("/cart/CompleteMyOrder.jsp").forward(request, response);
+                getServletContext().getRequestDispatcher("/cart/ConfirmOrder.jsp").forward(request, response);
                 return;
             }
         } 

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package servlet.account;
+package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,20 +11,19 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.UserTransaction;
-import jpa.model.Orders;
-import jpa.model.controller.OrdersJpaController;
+import jpa.model.Account;
+import jpa.model.controller.AccountJpaController;
+
 
 /**
  *
  * @author piyao
  */
-@WebServlet(name = "OrderDetailsServlet", urlPatterns = {"/OrderDetails"})
-public class OrderDetailsServlet extends HttpServlet {
+public class LoginServlet extends HttpServlet {
 
     @PersistenceUnit(unitName = "WebAppProjPU")
     EntityManagerFactory emf;
@@ -43,19 +42,28 @@ public class OrderDetailsServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String orderid = request.getParameter("orderid");
-
-        if (orderid != null && orderid.trim().length() > 0) {
-            int id = Integer.valueOf(orderid);
-
-            OrdersJpaController orderJpaCtrl = new OrdersJpaController(utx, emf);
-            Orders order = orderJpaCtrl.findOrders(id);
-
-            if (order != null) {
-                request.setAttribute("order", order);
-                getServletContext().getRequestDispatcher("/account/OrderDetails.jsp").forward(request, response);
-            }
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String returnUrl = request.getParameter("returnUrl");
+        
+        if (returnUrl != null) {
+            request.setAttribute("returnUrl", returnUrl);
         }
+        
+        System.out.println("Test : "+returnUrl);
+
+        if (username != null && username.trim().length() > 0 && password != null && password.trim().length() > 0) {
+            AccountJpaController customerJpaCtrl = new AccountJpaController(utx, emf);
+            Account customer = customerJpaCtrl.findAccount(Integer.valueOf(username));
+
+            if (customer != null && password.equals(customer.getPassword())) {
+                request.getSession().setAttribute("customer", customer);
+                getServletContext().getRequestDispatcher("/ProductList").forward(request, response);
+                return;
+            }
+            request.setAttribute("loginfailed", "Invalid username or password, Please re-enter");
+        }
+        getServletContext().getRequestDispatcher("/Login.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

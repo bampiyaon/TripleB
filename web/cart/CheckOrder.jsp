@@ -56,20 +56,19 @@
                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 66%"></div>
             </div>
         </fieldset>
-        <c:set value = "${sessionScope.customer.addressList}" var = "customerAddress"/>
-            <c:choose>
-                <c:when test = "${empty customerAddress}">
+        <c:set value = "${sessionScope.customer.addressList}" var = "customerAddress"></c:set>
+            
                     <form action="AddAddress" method="post">
                         <div class="form-group">
                             <h3>Shipping address in KMUTT</h3>
-                            <input type="text" class="form-control" id="InputStudentId" placeholder="ex. CB2301" name="location" width="20" required> 
+                            <input type="text" class="form-control" id="InputStudentId" placeholder="ex. CB2301" name="location" required> 
                             <small id="emailHelp" class="form-text text-muted">Please Enter in English</small>
-                            <input type="submit" class="btn btn-primary" value="Add Address"/>
+                            <button type="submit" class="btn btn-primary">Add Address</button>
                         </div>
                     </form>
-                </c:when>
-                <c:otherwise>
+                
                     <form action = "Checkout" method = "post">
+                        <h6>DEFAULT SHIPPING ADDRESS</h6>
                         <c:forEach items = "${customerAddress}" var = "address">
                             <div>
                                 <span class = "addressInfo">
@@ -79,8 +78,8 @@
                             </div>
 
                         </c:forEach>
-                    </c:otherwise>
-                </c:choose>
+                    
+                        
             <fieldset class="form-group">
                 <h3>Payment Methods</h3>
                 <div class="form-check">
@@ -102,7 +101,6 @@
                     <input type="submit" class="btn btn-primary" value="Pay Now"/>
                 </div>
             </fieldset>
-            
         </form>
     </div>
 </div>

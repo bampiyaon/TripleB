@@ -43,10 +43,6 @@
         <servlet-class>servlet.cart.RemoveFromCartServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>OrderHistoryServlet</servlet-name>
-        <servlet-class>servlet.account.OrderHistory</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>PaymentServlet</servlet-name>
         <servlet-class>servlet.payment.PaymentServlet</servlet-class>
     </servlet>
@@ -59,20 +55,12 @@
         <servlet-class>servlet.product.SearchServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>AddAddressServlet</servlet-name>
-        <servlet-class>servlet.account.AddAddressServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>CheckoutServlet</servlet-name>
         <servlet-class>servlet.cart.CheckoutServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ProductDetailServlet</servlet-name>
-        <servlet-class>servlet.product.ProductDetailServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>AddUpServlet</servlet-name>
-        <servlet-class>servlet.cart.AddUpServlet</servlet-class>
+        <servlet-name>AddAddressServlet</servlet-name>
+        <servlet-class>servlet.account.AddAddressServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -95,10 +83,6 @@
         <url-pattern>/Register</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>OrderHistoryServlet</servlet-name>
-        <url-pattern>/OrderHistory</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>PaymentServlet</servlet-name>
         <url-pattern>/Payment</url-pattern>
     </servlet-mapping>
@@ -115,16 +99,12 @@
         <url-pattern>/Checkout</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ProductDetailServlet</servlet-name>
-        <url-pattern>/ProductDetail</url-pattern>
+        <servlet-name>RemoveFromCartServlet</servlet-name>
+        <url-pattern>/RemoveFromCart</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AddUpServlet</servlet-name>
         <url-pattern>/AddUp</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>RemoveFromCartServlet</servlet-name>
-        <url-pattern>/RemoveFromCart</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AddAddressServlet</servlet-name>
@@ -135,4 +115,8 @@
             30
         </session-timeout>
     </session-config>
+    <servlet>
+        <servlet-name>AddUpServlet</servlet-name>
+        <servlet-class>servlet.cart.AddUpServlet</servlet-class>
+    </servlet>
 </web-app>

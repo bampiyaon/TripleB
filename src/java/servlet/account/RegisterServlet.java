@@ -53,12 +53,11 @@ public class RegisterServlet extends HttpServlet {
         String firstname = request.getParameter("firstname");
         String lastname = request.getParameter("lastname");
 
-        if (username != null  ) {
+        if (username != null) {
             if (username.trim().length() > 0 && password.trim().length() > 0 && firstname.trim().length() > 0
                     && lastname.trim().length() > 0) {
                 AccountJpaController actrl = new AccountJpaController(utx, emf);
                 Account account = new Account(String.valueOf(actrl.getAccountCount()) + 1);
-                
 
                 account.setFirstname(firstname);
                 account.setLastname(lastname);
@@ -67,17 +66,17 @@ public class RegisterServlet extends HttpServlet {
 
                 try {
                     AccountJpaController accountJpaController = new AccountJpaController(utx, emf);
-                List<Account> listAccount = accountJpaController.findAccountEntities();
-                    
-                if (listAccount != null) {
-                    for (Account a : listAccount) {
-                        if (username.equalsIgnoreCase(a.getUsername())) {
-                            request.setAttribute("emailNotice", "Sorry, this username belongs to an existing account.");
-                            getServletContext().getRequestDispatcher("/account/Register.jsp").forward(request, response);
-                            return;
+                    List<Account> listAccount = accountJpaController.findAccountEntities();
+
+                    if (listAccount != null) {
+                        for (Account a : listAccount) {
+                            if (username.equalsIgnoreCase(a.getUsername())) {
+                                request.setAttribute("emailNotice", "Sorry, this username belongs to an existing account.");
+                                getServletContext().getRequestDispatcher("/account/Register.jsp").forward(request, response);
+                                return;
+                            }
                         }
                     }
-                }
                     actrl.create(account);
                 } catch (RollbackFailureException ex) {
                     Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
@@ -85,14 +84,13 @@ public class RegisterServlet extends HttpServlet {
                     Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                    getServletContext().getRequestDispatcher("/index.html").forward(request, response);
+                getServletContext().getRequestDispatcher("/index.html").forward(request, response);
                 return;
-                
+
             }
-            
-            
+
         }
-        
+
         getServletContext().getRequestDispatcher("/account/Register.jsp").forward(request, response);
 
     }
