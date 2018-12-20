@@ -41,10 +41,24 @@
                         <li class="nav-item">
                             <a class="nav-link js-scroll-trigger" href="ProductList">Product</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link js-scroll-trigger" href="OrderHistory">Recent Order</a>
-                        </li>
-                    </ul>                       
+                    </ul>
+                    <form action = "Search" class="form-inline my-2 my-lg-0">
+                        <select name = "searchOption" required class="form-control">
+                            <option value = "all">All</option>
+                            <option value = "101">Uncle Num Square</option>
+                            <option value = "102">Jaidee Shop</option>
+                            <option value = "103">Mana Shop</option>
+                            <option value = "104">Islamic Food Shop</option>
+                            <option value = "105">KFC Shop no.1</option>
+                            <option value = "106">KFC Shop no.2</option>
+                            <option value = "107">KFC Shop no.3</option>
+                            <option value = "108">KFC Shop no.4</option>
+                            <option value = "109">KFC Shop no.5</option>
+                            <option value = "110">KFC Shop no.6</option>
+                        </select>
+                        <input class="form-control mr-sm-2" type = "text" name = "keyword" placeholder="Search">
+                        <input class="btn btn-secondary my-2 my-sm-0" type = "submit" value = "Search">
+                    </form>
                 </div>
             </div>
         </nav> 
@@ -94,7 +108,7 @@
             </form>
         </c:when>
         <c:otherwise>
-            <div class="container" style="margin-top:200px">
+            <div class="container" style="margin-top:180px">
                 <h2>Your cart is empty.</h2>
                 <a href = "ProductList">Continue Shopping</a>
             </div>
