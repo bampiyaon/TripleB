@@ -44,41 +44,26 @@ public class RemoveFromCartServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-//        String productid = request.getParameter("productid");
-//        HttpSession session = request.getSession(false);
-//        ProductJpaController productJpaCtrl = new ProductJpaController(utx, emf);
-//        Product p = productJpaCtrl.findProduct(productid);
-//        
-//        if (session != null) {
-//            ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
-//            if (cart != null) {
-//                if (productid != null && productid.trim().length() > 0) {
-//                    cart.remove(p);
-//                    if (cart.getLineItems().isEmpty()) {
-//                        request.getSession().setAttribute("cart", null);
-//                    } else {
-//                        request.getSession().setAttribute("cart", cart);
-//                    }
-//                    getServletContext().getRequestDispatcher("/ShowCart").forward(request, response);
-////                    response.sendRedirect("ShowCart");
-//                }
-//            }
-//        }
-        
-        HttpSession session = request.getSession(true);
-        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
-        if (cart == null) {
-            cart = new ShoppingCart();
-            session.setAttribute("cart", cart);
-        }
-        String productId = request.getParameter("productid");
+        String productid = request.getParameter("productid");
+        HttpSession session = request.getSession(false);
         ProductJpaController productJpaCtrl = new ProductJpaController(utx, emf);
-        Product p = productJpaCtrl.findProduct(productId);
+        Product p = productJpaCtrl.findProduct(productid);
         
-        cart.remove(p);
-        session.setAttribute("cart", cart);
-//        getServletContext().getRequestDispatcher("/ShowCart").forward(request, response);
-        response.sendRedirect("ShowCart");
+        if (session != null) {
+            ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
+            if (cart != null) {
+                if (productid != null && productid.trim().length() > 0) {
+                    cart.remove(p);
+                    if (cart.getLineItems().isEmpty()) {
+                        request.getSession().setAttribute("cart", null);
+                    } else {
+                        request.getSession().setAttribute("cart", cart);
+                    }
+                    getServletContext().getRequestDispatcher("/ShowCart").forward(request, response);
+                }
+            }
+        }
+        
 
     }
 

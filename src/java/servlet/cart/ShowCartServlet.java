@@ -31,10 +31,7 @@ public class ShowCartServlet extends HttpServlet {
             throws ServletException, IOException {
                 
             getServletContext().getRequestDispatcher("/cart/ShowCart.jsp").forward(request, response);
-            
         }
-    
-
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
